@@ -19,6 +19,9 @@ public class UserManager implements UserOperations {
     // Tracks currently logged-in student
     private Student currentStudent = null;
 
+    // Tracks if admin is currently authenticated
+    private boolean isAdminLoggedIn = false;
+
     // Concept Used: Method
     // Student Registration - accepts details and stores Student object
     public void registerStudent() {
@@ -103,11 +106,29 @@ public class UserManager implements UserOperations {
             pass.equals(adminPassword)) {
 
             System.out.println("Admin Login Successful.");
+            isAdminLoggedIn = true;
 
         } else {
 
             System.out.println("Invalid Admin Credentials.");
         }
+    }
+
+    // Concept Used: Method
+    // Returns whether an admin is currently authenticated
+    public boolean isAdminAuthenticated() {
+
+        return isAdminLoggedIn;
+
+    }
+
+    // Concept Used: Method
+    // Logs out the admin by setting authentication flag to false
+    public void adminLogout() {
+
+        isAdminLoggedIn = false;
+        System.out.println("Admin logged out successfully.");
+
     }
 
     // Concept Used: Method

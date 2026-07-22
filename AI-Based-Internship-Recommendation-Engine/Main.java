@@ -12,19 +12,24 @@ public class Main {
         // Create UserManager object to manage operations
         UserManager manager = new UserManager();
 
+        // Concept Used: Object Creation
+        // Create InternshipManager object to manage internships (Module 2)
+        InternshipManager internshipManager = new InternshipManager(manager);
+
         int choice;
 
         do {
 
-            System.out.println("\n================================");
-            System.out.println("PM Internship Recommendation System");
-            System.out.println("================================");
+            System.out.println("\n=================================");
+            System.out.println(" PM Internship Recommendation System");
+            System.out.println("=================================");
             System.out.println("1. Student Registration");
             System.out.println("2. Student Login");
             System.out.println("3. Admin Login");
             System.out.println("4. View Profile");
             System.out.println("5. Update Profile");
-            System.out.println("6. Exit");
+            System.out.println("6. Internship Management (Admin Only)");
+            System.out.println("7. Exit");
 
             System.out.print("Enter Choice: ");
             choice = sc.nextInt();
@@ -58,6 +63,13 @@ public class Main {
                     break;
 
                 case 6:
+                    // Concept Used: Method Calling
+                    // Internship Management - Accessible only to Admin
+                    // InternshipManager checks admin authentication internally
+                    internshipManager.showInternshipMenu();
+                    break;
+
+                case 7:
                     System.out.println("Thank You!");
                     break;
 
@@ -65,7 +77,7 @@ public class Main {
                     System.out.println("Invalid Choice.");
             }
 
-        } while (choice != 6);
+        } while (choice != 7);
 
     }
 }
