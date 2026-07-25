@@ -16,6 +16,13 @@ public class Main {
         // Create InternshipManager object to manage internships (Module 2)
         InternshipManager internshipManager = new InternshipManager(manager);
 
+        // Concept Used: Object Creation
+        // Create RecommendationEngine to bridge Module 1 and Module 2 (Module 3)
+        RecommendationEngine recommendationEngine = new RecommendationEngine(manager, internshipManager);
+
+        // Inject RecommendationEngine into UserManager for student menu access
+        manager.setRecommendationEngine(recommendationEngine);
+
         int choice;
 
         do {

@@ -1,0 +1,2 @@
+1|TCS|SDE|java,python|8.5|chennai|20000.0|6
+2|Cisco|Tester|frontend,cpp|8.0|chennai|10000.0|3

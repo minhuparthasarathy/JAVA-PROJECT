@@ -22,6 +22,17 @@ public class UserManager implements UserOperations {
     // Tracks if admin is currently authenticated
     private boolean isAdminLoggedIn = false;
 
+    // Reference to RecommendationEngine for Module 3 integration
+    private RecommendationEngine recommendationEngine;
+
+    // Concept Used: Method
+    // Sets the RecommendationEngine instance for generating recommendations
+    public void setRecommendationEngine(RecommendationEngine engine) {
+
+        this.recommendationEngine = engine;
+
+    }
+
     // Concept Used: Method
     // Student Registration - accepts details and stores Student object
     public void registerStudent() {
@@ -171,7 +182,8 @@ public class UserManager implements UserOperations {
 
             System.out.println("\n1.View Profile");
             System.out.println("2.Update Profile");
-            System.out.println("3.Logout");
+            System.out.println("3.View Internship Recommendations");
+            System.out.println("4.Logout");
 
             choice = sc.nextInt();
             sc.nextLine();
@@ -186,9 +198,23 @@ public class UserManager implements UserOperations {
                     updateStudentProfile(s);
                     break;
 
+                case 3:
+                    // Concept Used: Method Calling
+                    // View personalized internship recommendations (Module 3)
+                    if (recommendationEngine != null) {
+
+                        recommendationEngine.viewRecommendations(s);
+
+                    } else {
+
+                        System.out.println("Recommendation Engine not available.");
+
+                    }
+                    break;
+
             }
 
-        } while (choice != 3);
+        } while (choice != 4);
 
         currentStudent = null;
     }
