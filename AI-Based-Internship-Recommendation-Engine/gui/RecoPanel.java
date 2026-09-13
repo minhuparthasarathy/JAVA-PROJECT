@@ -289,4 +289,12 @@ public class RecoPanel extends JPanel {
         if (s == null) return "";
         return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
+
+    public void refresh() {
+        removeAll();
+        add(createHeader("Internship Recommendations"), BorderLayout.NORTH);
+        add(createContent(), BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
 }

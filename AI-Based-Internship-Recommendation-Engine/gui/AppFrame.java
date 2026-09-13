@@ -34,6 +34,7 @@ public class AppFrame extends JFrame {
     private AdminLoginPanel adminLoginPanel;
     private AdminDashPanel adminDashPanel;
     private InternshipMgmtPanel internshipMgmtPanel;
+    private SearchPanel searchPanel;
 
     public static final Color PRIMARY = new Color(37, 99, 235);
     public static final Color PRIMARY_DARK = new Color(29, 78, 216);
@@ -157,6 +158,7 @@ public class AppFrame extends JFrame {
         adminLoginPanel = new AdminLoginPanel(this);
         adminDashPanel = new AdminDashPanel(this);
         internshipMgmtPanel = new InternshipMgmtPanel(this);
+        searchPanel = new SearchPanel(this);
 
         cards.add(welcomePanel, "welcome");
         cards.add(studentLoginPanel, "studentLogin");
@@ -167,6 +169,7 @@ public class AppFrame extends JFrame {
         cards.add(adminLoginPanel, "adminLogin");
         cards.add(adminDashPanel, "adminDash");
         cards.add(internshipMgmtPanel, "internshipMgmt");
+        cards.add(searchPanel, "search");
 
         setLayout(new BorderLayout());
         add(cards, BorderLayout.CENTER);
@@ -225,12 +228,13 @@ public class AppFrame extends JFrame {
     public void showWelcome() { showPanel("welcome"); }
     public void showStudentLogin() { showPanel("studentLogin"); }
     public void showStudentReg() { showPanel("studentReg"); }
-    public void showStudentDash() { showPanel("studentDash"); }
-    public void showProfile() { showPanel("profile"); }
-    public void showRecommendations() { showPanel("recommendations"); }
+    public void showStudentDash() { studentDashPanel.refresh(); showPanel("studentDash"); }
+    public void showProfile() { profilePanel.refresh(); showPanel("profile"); }
+    public void showRecommendations() { recoPanel.refresh(); showPanel("recommendations"); }
     public void showAdminLogin() { showPanel("adminLogin"); }
     public void showAdminDash() { showPanel("adminDash"); }
     public void showInternshipMgmt() { showPanel("internshipMgmt"); }
+    public void showSearch() { searchPanel.refresh(); showPanel("search"); }
 
     public void setCurrentStudent(Student s) { this.currentStudent = s; }
     public Student getCurrentStudent() { return currentStudent; }

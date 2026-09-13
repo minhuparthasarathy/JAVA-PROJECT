@@ -43,19 +43,14 @@ public class ProfilePanel extends JPanel {
     private JPanel createContent() {
         JPanel center = new JPanel();
         center.setBackground(AppFrame.BG);
-        center.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(20, 24, 20, 24);
-        gbc.weightx = 1.0;
+        center.setLayout(new BorderLayout(0, 8));
+        center.setBorder(new EmptyBorder(20, 24, 20, 24));
 
         Student s = frame.getCurrentStudent();
         if (s == null) {
             JLabel msg = new JLabel("Please login to view profile.");
             msg.setFont(AppFrame.BODY_FONT);
-            center.add(msg);
+            center.add(msg, BorderLayout.CENTER);
             return center;
         }
 
@@ -72,7 +67,6 @@ public class ProfilePanel extends JPanel {
         cgb.weightx = 1.0;
         cgb.insets = new Insets(0, 0, 0, 0);
 
-        // Section 1: View Profile
         JLabel viewTitle = new JLabel("View Profile");
         viewTitle.setFont(AppFrame.PAGE_TITLE);
         viewTitle.setForeground(AppFrame.TEXT);
@@ -86,7 +80,6 @@ public class ProfilePanel extends JPanel {
         cgb = addLabelValue(cgb, card, "Degree", s.getDegree());
         cgb = addLabelValue(cgb, card, "CGPA", String.valueOf(s.getCgpa()));
 
-        // Section 2: Edit Profile
         JLabel editTitle = new JLabel("Edit Profile");
         editTitle.setFont(AppFrame.SECTION_TITLE);
         editTitle.setForeground(AppFrame.PRIMARY);
@@ -116,30 +109,36 @@ public class ProfilePanel extends JPanel {
         locationField.setMaximumSize(new Dimension(400, 36));
         cgb = addEditField(cgb, card, "Preferred Location", locationField);
 
-        // Buttons
+        cgb.gridx = 0;
+        cgb.gridy = 0;
+
+        JScrollPane scrollPane = new JScrollPane(card);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        center.add(scrollPane, BorderLayout.CENTER);
+
         JPanel btnPanel = new JPanel();
         btnPanel.setBackground(AppFrame.SURFACE);
-        btnPanel.setLayout(new GridLayout(1, 2, 10, 0));
+        btnPanel.setLayout(new GridLayout(1, 3, 10, 0));
         btnPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JButton saveBtn = new JButton("Save Changes");
         AppFrame.stylePrimary(saveBtn);
         saveBtn.addActionListener(e -> doSave());
 
+        JButton backBtn = new JButton("Back to Dashboard");
+        AppFrame.styleBack(backBtn);
+        backBtn.addActionListener(e -> frame.showStudentDash());
+
         JButton logoutBtn = new JButton("Logout");
         AppFrame.styleDelete(logoutBtn);
         logoutBtn.addActionListener(e -> frame.logout());
 
         btnPanel.add(saveBtn);
+        btnPanel.add(backBtn);
         btnPanel.add(logoutBtn);
 
-        cgb.gridy++;
-        cgb.insets = new Insets(24, 0, 0, 0);
-        card.add(btnPanel, cgb);
-
-        cgb.gridx = 0;
-        cgb.gridy = 0;
-        center.add(card, cgb);
+        center.add(btnPanel, BorderLayout.SOUTH);
         return center;
     }
 
@@ -218,5 +217,14 @@ public class ProfilePanel extends JPanel {
         frame.showProfile();
         JOptionPane.showMessageDialog(this, "Profile Updated Successfully!",
             "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void refresh() {
+        removeAll();
+        add(createHeader("My Profile"), BorderLayout.NORTH);
+        add(createContent(), BorderLayout.CENTER);
+        add(createFooter(), BorderLayout.SOUTH);
+        revalidate();
+        repaint();
     }
 }

@@ -140,11 +140,7 @@ public class StudentDashPanel extends JPanel {
 
         JButton profileBtn = createActionBtn("View Profile", AppFrame.PRIMARY, e -> frame.showProfile());
         JButton recoBtn = createActionBtn("View Recommendations", AppFrame.PRIMARY, e -> frame.showRecommendations());
-        JButton internshipBtn = createActionBtn("Browse Internships", AppFrame.PRIMARY, e -> {
-            JOptionPane.showMessageDialog(this,
-                "Internships will be visible once they are posted by the admin.",
-                "Internships", JOptionPane.INFORMATION_MESSAGE);
-        });
+        JButton internshipBtn = createActionBtn("Search & Filter", AppFrame.PRIMARY, e -> frame.showSearch());
         JButton logoutBtn = createActionBtn("Logout", new Color(220, 38, 38), e -> frame.logout());
 
         btnRow.add(profileBtn);
@@ -200,5 +196,14 @@ public class StudentDashPanel extends JPanel {
         }
         btn.addActionListener(listener);
         return btn;
+    }
+
+    public void refresh() {
+        removeAll();
+        add(createHeader(), BorderLayout.NORTH);
+        add(createContent(), BorderLayout.CENTER);
+        add(createFooter(), BorderLayout.SOUTH);
+        revalidate();
+        repaint();
     }
 }
