@@ -129,6 +129,17 @@ public class Student {
     }
 
     // Concept Used: Method
+    // Converts student object to a pipe-delimited file format string
+    // This format is used for saving to students.txt (Module 5 storage)
+    public String toFileString() {
+
+        return studentId + "|" + name + "|" + age + "|" + degree + "|" +
+               cgpa + "|" + skills + "|" + interests + "|" +
+               preferredLocation + "|" + password;
+
+    }
+
+    // Concept Used: Method
     // Displays student details
     public void displayProfile() {
 

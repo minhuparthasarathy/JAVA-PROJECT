@@ -4,6 +4,7 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -139,6 +140,15 @@ public class AppFrame extends JFrame {
 
         // Initialize business logic
         userManager = new UserManager();
+
+        // Load existing students from storage (Module 5)
+        ArrayList<Student> loadedStudents = StudentStorage.loadStudents();
+        for (Student s : loadedStudents) {
+            if (userManager.count < userManager.students.length) {
+                userManager.students[userManager.count++] = s;
+            }
+        }
+
         internshipManager = new InternshipManager(userManager);
         recommendationEngine = new RecommendationEngine(userManager, internshipManager);
         userManager.setRecommendationEngine(recommendationEngine);
