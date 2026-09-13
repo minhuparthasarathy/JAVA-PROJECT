@@ -126,6 +126,26 @@ public class UserManager implements UserOperations {
     }
 
     // Concept Used: Method
+    // Non-Scanner authentication for Swing GUI integration
+    // Returns authenticated Student or null
+    public Student authenticateStudent(int studentId, String password) {
+
+        for (int i = 0; i < count; i++) {
+
+            if (students[i].getStudentId() == studentId &&
+                students[i].getPassword().equals(password)) {
+
+                return students[i];
+
+            }
+
+        }
+
+        return null;
+
+    }
+
+    // Concept Used: Method
     // Returns whether an admin is currently authenticated
     public boolean isAdminAuthenticated() {
 
