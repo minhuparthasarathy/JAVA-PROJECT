@@ -3,6 +3,7 @@ import javax.swing.border.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 /**
  * Swing GUI - Profile Panel
@@ -214,6 +215,7 @@ public class ProfilePanel extends JPanel {
         s.setSkills(skills);
         s.setInterests(interests);
         s.setPreferredLocation(location);
+        StudentStorage.saveStudent(s);
         frame.showProfile();
         JOptionPane.showMessageDialog(this, "Profile Updated Successfully!",
             "Success", JOptionPane.INFORMATION_MESSAGE);

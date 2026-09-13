@@ -3,6 +3,7 @@ import javax.swing.border.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 /**
  * Swing GUI - Student Registration Panel
@@ -210,6 +211,7 @@ public class StudentRegPanel extends JPanel {
             Student student = new Student(id, name, age, degree, cgpa, skills, interests, location, password);
             UserManager um = frame.getUserManager();
             um.students[um.count++] = student;
+            StudentStorage.saveStudent(student);
 
             JOptionPane.showMessageDialog(this, "Registration Successful! Please login.", "Success", JOptionPane.INFORMATION_MESSAGE);
             frame.showStudentLogin();
