@@ -4,41 +4,41 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class InternshipMgmtPanel extends JPanel {
+public class UpdateInternshipPanel extends JPanel {
 
     private AppFrame frame;
     private JTextField idField, companyField, roleField, skillsField, cgpaField, locationField, stipendField, durationField;
 
-    public InternshipMgmtPanel(AppFrame frame) {
+    public UpdateInternshipPanel(AppFrame frame) {
         this.frame = frame;
         setBackground(AppFrame.BG);
         setLayout(new BorderLayout(0, 0));
 
-        add(createHeader(), BorderLayout.NORTH);
+        add(createHeader("Update Internship"), BorderLayout.NORTH);
         add(createContent(), BorderLayout.CENTER);
         add(createFooter(), BorderLayout.SOUTH);
     }
 
-    private JPanel createHeader() {
+    private JPanel createHeader(String title) {
         JPanel header = new JPanel();
         header.setBackground(AppFrame.PRIMARY_DARK);
         header.setPreferredSize(new Dimension(1000, 64));
         header.setLayout(new BorderLayout());
         header.setBorder(new EmptyBorder(0, 24, 0, 24));
 
-        JLabel label = new JLabel("Add Internship");
+        JLabel label = new JLabel(title);
         label.setFont(AppFrame.PAGE_TITLE);
         label.setForeground(Color.WHITE);
         label.setBorder(new EmptyBorder(0, 0, 0, 16));
         header.add(label, BorderLayout.CENTER);
 
-        JButton logoutBtn = new JButton("Logout");
-        AppFrame.styleDelete(logoutBtn);
-        logoutBtn.addActionListener(e -> frame.logout());
+        JButton backBtn = new JButton("Back to Dashboard");
+        AppFrame.styleBack(backBtn);
+        backBtn.addActionListener(e -> frame.showAdminDash());
 
         JPanel right = new JPanel();
         right.setBackground(AppFrame.PRIMARY_DARK);
-        right.add(logoutBtn);
+        right.add(backBtn);
         header.add(right, BorderLayout.EAST);
         return header;
     }
@@ -53,7 +53,7 @@ public class InternshipMgmtPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(formPanel);
         scrollPane.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(AppFrame.BORDER_COLOR),
-            "Internship Details",
+            "Update Internship Details",
             javax.swing.border.TitledBorder.LEFT,
             javax.swing.border.TitledBorder.TOP,
             new Font("SansSerif", Font.BOLD, 14),
@@ -106,22 +106,27 @@ public class InternshipMgmtPanel extends JPanel {
 
         durationField = new JTextField(12);
         durationField.setMaximumSize(new Dimension(500, 36));
-        addFormFull(formPanel, gbc, "Duration (months)", durationField);
+        addFormFull(formPanel, gbc, "Duration", durationField);
 
         JPanel btnPanel = new JPanel();
         btnPanel.setBackground(AppFrame.SURFACE);
-        btnPanel.setLayout(new GridLayout(1, 2, 10, 0));
+        btnPanel.setLayout(new GridLayout(1, 3, 10, 0));
 
-        JButton addBtn = new JButton("Add Internship");
-        AppFrame.stylePrimary(addBtn);
-        addBtn.addActionListener(e -> doAdd());
+        JButton loadBtn = new JButton("Load");
+        AppFrame.stylePrimary(loadBtn);
+        loadBtn.addActionListener(e -> doLoad());
 
-        JButton backBtn = new JButton("Back to Dashboard");
-        AppFrame.styleBack(backBtn);
-        backBtn.addActionListener(e -> frame.showAdminDash());
+        JButton updateBtn = new JButton("Update");
+        AppFrame.stylePrimary(updateBtn);
+        updateBtn.addActionListener(e -> doUpdate());
 
-        btnPanel.add(addBtn);
-        btnPanel.add(backBtn);
+        JButton clearBtn = new JButton("Clear");
+        AppFrame.styleBack(clearBtn);
+        clearBtn.addActionListener(e -> clearForm());
+
+        btnPanel.add(loadBtn);
+        btnPanel.add(updateBtn);
+        btnPanel.add(clearBtn);
 
         gbc.gridy++;
         gbc.gridx = 0;
@@ -138,11 +143,10 @@ public class InternshipMgmtPanel extends JPanel {
         JPanel footer = new JPanel();
         footer.setBackground(AppFrame.BG);
         footer.setBorder(new EmptyBorder(8, 0, 8, 0));
-        footer.setLayout(new BorderLayout());
         JLabel footerLabel = new JLabel("  PM Internship Scheme");
         footerLabel.setFont(AppFrame.SMALL_FONT);
         footerLabel.setForeground(AppFrame.TEXT_SEC);
-        footer.add(footerLabel, BorderLayout.CENTER);
+        footer.add(footerLabel);
         return footer;
     }
 
@@ -187,7 +191,43 @@ public class InternshipMgmtPanel extends JPanel {
         panel.add(field, gbc);
     }
 
-    private void doAdd() {
+    private void doLoad() {
+        clearForm();
+        String idText = idField.getText().trim();
+        if (idText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Internship ID is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int id;
+        try {
+            id = Integer.parseInt(idText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Internship ID must be a number.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        ArrayList<Internship> internships = frame.getInternshipManager().getAllInternships();
+        for (Internship intern : internships) {
+            if (intern.getId() == id) {
+                companyField.setText(intern.getCompany());
+                roleField.setText(intern.getRole());
+                skillsField.setText(intern.getRequiredSkills());
+                cgpaField.setText(String.valueOf(intern.getRequiredCGPA()));
+                locationField.setText(intern.getLocation());
+                stipendField.setText(String.valueOf(intern.getStipend()));
+                durationField.setText(intern.getDuration());
+                JOptionPane.showMessageDialog(this, "Internship loaded successfully.",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+        }
+        JOptionPane.showMessageDialog(this, "Internship not found with ID: " + id,
+            "Not Found", JOptionPane.WARNING_MESSAGE);
+    }
+
+    private void doUpdate() {
         String idText = idField.getText().trim();
         if (idText.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Internship ID is required.",
@@ -206,7 +246,6 @@ public class InternshipMgmtPanel extends JPanel {
         String company = companyField.getText().trim();
         String role = roleField.getText().trim();
         String skills = skillsField.getText().trim();
-        String location = locationField.getText().trim();
         String durationStr = durationField.getText().trim();
 
         if (company.isEmpty()) {
@@ -224,11 +263,6 @@ public class InternshipMgmtPanel extends JPanel {
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (location.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Location is required.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         if (durationStr.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Duration is required.",
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
@@ -243,7 +277,12 @@ public class InternshipMgmtPanel extends JPanel {
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+        String location = locationField.getText().trim();
+        if (location.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Location is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         double stipend;
         try {
             stipend = Double.parseDouble(stipendField.getText().trim());
@@ -259,18 +298,24 @@ public class InternshipMgmtPanel extends JPanel {
         }
 
         ArrayList<Internship> internships = frame.getInternshipManager().getAllInternships();
-        for (Internship existing : internships) {
-            if (existing.getId() == id) {
-                JOptionPane.showMessageDialog(this, "Internship ID already exists.",
-                    "Duplicate ID", JOptionPane.WARNING_MESSAGE);
-                return;
+        boolean found = false;
+        for (int i = 0; i < internships.size(); i++) {
+            if (internships.get(i).getId() == id) {
+                Internship updated = new Internship(id, company, role, skills, cgpa, location, stipend, durationStr);
+                internships.set(i, updated);
+                found = true;
+                break;
             }
         }
+        if (!found) {
+            JOptionPane.showMessageDialog(this, "Internship not found with ID: " + id,
+                "Not Found", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        Internship newIntern = new Internship(id, company, role, skills, cgpa, location, stipend, durationStr);
-        frame.getInternshipManager().addInternship(newIntern);
+        frame.getInternshipManager().saveInternshipsToFile();
         clearForm();
-        JOptionPane.showMessageDialog(this, "Internship Added Successfully!",
+        JOptionPane.showMessageDialog(this, "Internship Updated Successfully!",
             "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -283,5 +328,9 @@ public class InternshipMgmtPanel extends JPanel {
         locationField.setText("");
         stipendField.setText("");
         durationField.setText("");
+    }
+
+    public void refresh() {
+        clearForm();
     }
 }

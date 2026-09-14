@@ -23,9 +23,11 @@ public class RecommendationEngine {
     // Compares student profile against all available internships
     public ArrayList<Recommendation> generateRecommendations(Student student) {
 
-        // Concept Used: Collections - ArrayList
-        // Store generated recommendation objects
         ArrayList<Recommendation> recommendations = new ArrayList<>();
+
+        if (student == null) {
+            return recommendations;
+        }
 
         // Get all internships from Module 2
         ArrayList<Internship> internships = internshipManager.getAllInternships();
@@ -66,6 +68,10 @@ public class RecommendationEngine {
     // Calculates a match score between a student and an internship
     // Score is based on: skill match percentage (60%) + CGPA eligibility (40%)
     public double calculateMatchScore(Student student, Internship internship) {
+
+        if (student == null || internship == null) {
+            return 0.0;
+        }
 
         // Concept Used: Conditional Statement
         // Quick check: if student CGPA is less than required CGPA, score is 0

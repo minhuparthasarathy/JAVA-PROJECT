@@ -116,6 +116,36 @@ public class Student {
 
     }
 
+    public void setName(String name) {
+
+        this.name = name;
+
+    }
+
+    public void setAge(int age) {
+
+        this.age = age;
+
+    }
+
+    public void setDegree(String degree) {
+
+        this.degree = degree;
+
+    }
+
+    public void setCgpa(double cgpa) {
+
+        this.cgpa = cgpa;
+
+    }
+
+    public void setPassword(String password) {
+
+        this.password = password;
+
+    }
+
     // Concept Used: Method
     // Updates student information
     public void updateProfile(String skills,

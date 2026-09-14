@@ -176,48 +176,114 @@ public class StudentRegPanel extends JPanel {
      * JTextArea for long text fields with scroll
      */
     private void doRegister() {
-        try {
-            int id = Integer.parseInt(idField.getText().trim());
-            String name = nameField.getText().trim();
-            int age = Integer.parseInt(ageField.getText().trim());
-            String degree = degreeField.getText().trim();
-            double cgpa = Double.parseDouble(cgpaField.getText().trim());
-            String skills = skillsArea.getText().trim();
-            String interests = interestsArea.getText().trim();
-            String location = locationField.getText().trim();
-            String password = new String(passField.getPassword()).trim();
-
-            if (name.isEmpty() || degree.isEmpty() || skills.isEmpty() || interests.isEmpty() || location.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "All fields are required.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if (age < 16 || age > 60) {
-                JOptionPane.showMessageDialog(this, "Age must be between 16 and 60.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if (cgpa < 0 || cgpa > 10) {
-                JOptionPane.showMessageDialog(this, "CGPA must be between 0 and 10.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Check for duplicate Student ID
-            for (int i = 0; i < frame.getUserManager().count; i++) {
-                if (frame.getUserManager().students[i].getStudentId() == id) {
-                    JOptionPane.showMessageDialog(this, "Student ID already exists.", "Duplicate ID", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-            }
-
-            Student student = new Student(id, name, age, degree, cgpa, skills, interests, location, password);
-            UserManager um = frame.getUserManager();
-            um.students[um.count++] = student;
-            StudentStorage.saveStudent(student);
-
-            JOptionPane.showMessageDialog(this, "Registration Successful! Please login.", "Success", JOptionPane.INFORMATION_MESSAGE);
-            frame.showStudentLogin();
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter valid numbers for ID, Age, and CGPA.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+        String idText = idField.getText().trim();
+        if (idText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Student ID is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        int id;
+        try {
+            id = Integer.parseInt(idText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Student ID must be a number.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String name = nameField.getText().trim();
+        if (name.isEmpty() || !name.matches(".*[a-zA-Z].*")) {
+            JOptionPane.showMessageDialog(this, "Name is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String ageText = ageField.getText().trim();
+        if (ageText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Age is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int age;
+        try {
+            age = Integer.parseInt(ageText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Age must be a valid number.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String degree = degreeField.getText().trim();
+        if (degree.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Degree is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String cgpaText = cgpaField.getText().trim();
+        if (cgpaText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "CGPA is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        double cgpa;
+        try {
+            cgpa = Double.parseDouble(cgpaText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "CGPA must be a number.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String skills = skillsArea.getText().trim();
+        if (skills.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Skills are required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String interests = interestsArea.getText().trim();
+        if (interests.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Interests are required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String location = locationField.getText().trim();
+        if (location.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preferred location is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String password = new String(passField.getPassword()).trim();
+        if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Password is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (age < 16 || age > 60) {
+            JOptionPane.showMessageDialog(this, "Age must be between 16 and 60.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (cgpa < 0 || cgpa > 10) {
+            JOptionPane.showMessageDialog(this, "CGPA must be between 0 and 10.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Check for duplicate Student ID
+        for (int i = 0; i < frame.getUserManager().count; i++) {
+            if (frame.getUserManager().students[i].getStudentId() == id) {
+                JOptionPane.showMessageDialog(this, "Student ID already exists.", "Duplicate ID", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+
+        Student student = new Student(id, name, age, degree, cgpa, skills, interests, location, password);
+        UserManager um = frame.getUserManager();
+        um.students[um.count++] = student;
+        StudentStorage.saveStudent(student);
+
+        JOptionPane.showMessageDialog(this, "Registration Successful! Please login.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        frame.showStudentLogin();
     }
 }

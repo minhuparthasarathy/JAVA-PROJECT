@@ -89,7 +89,7 @@ public class SearchFilter {
     public ArrayList<Internship> filterByMinimumCGPA(ArrayList<Internship> source, double minCGPA) {
         ArrayList<Internship> result = new ArrayList<>();
         for (Internship intern : source) {
-            if (intern.getRequiredCGPA() >= minCGPA) {
+            if (intern.getRequiredCGPA() <= minCGPA) {
                 result.add(intern);
             }
         }

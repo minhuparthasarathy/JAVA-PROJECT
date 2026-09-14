@@ -126,27 +126,32 @@ public class AdminLoginPanel extends JPanel {
     }
 
     /**
-     * Uses UserManager.adminLogin() for consistency with existing admin auth logic
+     * Uses UserManager.authenticateAdmin() for Swing GUI
      * Exception Handling - validates input fields
      */
     private void doLogin() {
         String user = userField.getText().trim();
         String pass = new String(passField.getPassword()).trim();
 
-        if (user.isEmpty() || pass.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter username and password.",
+        if (user.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username is required.",
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        frame.getUserManager().adminLogin(); // invokes logic
+        if (pass.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Password is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        if (frame.isAdminLoggedIn()) {
+        if (frame.getUserManager().authenticateAdmin(user, pass)) {
+            frame.setAdminLoggedIn(true);
             JOptionPane.showMessageDialog(this, "Admin Login Successful!",
                 "Success", JOptionPane.INFORMATION_MESSAGE);
             frame.showAdminDash();
         } else {
-            JOptionPane.showMessageDialog(this, "Invalid Admin Credentials.",
+            JOptionPane.showMessageDialog(this, "Username is incorrect.",
                 "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
     }

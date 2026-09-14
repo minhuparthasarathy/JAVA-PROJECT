@@ -2,6 +2,9 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.File;
 
 // Concept Used: Interface Implementation
 // InternshipManager implements the InternshipOperations interface
@@ -28,7 +31,47 @@ public class InternshipManager implements InternshipOperations {
         sc = new Scanner(System.in);
         nextId = 1;
         this.userManager = userManager;
+        loadFromFile();
 
+    }
+
+    // Concept Used: Method - File I/O (Integration with Module 5)
+    // Loads internship data from internships.txt
+    public void loadFromFile() {
+        try {
+            File file = new File("internships.txt");
+            if (!file.exists()) {
+                return;
+            }
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+                String[] parts = line.split("\\|");
+                if (parts.length == 8) {
+                    try {
+                        int id = Integer.parseInt(parts[0].trim());
+                        String company = parts[1].trim();
+                        String role = parts[2].trim();
+                        String skills = parts[3].trim();
+                        double cgpa = Double.parseDouble(parts[4].trim());
+                        String location = parts[5].trim();
+                        double stipend = Double.parseDouble(parts[6].trim());
+                        String duration = parts[7].trim();
+                        internships.add(new Internship(id, company, role, skills, cgpa, location, stipend, duration));
+                        if (id >= nextId) {
+                            nextId = id + 1;
+                        }
+                    } catch (NumberFormatException e) {
+                        // Skip malformed lines
+                    }
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            // Return silently on error - do not crash
+        }
     }
 
     // Concept Used: Method
@@ -131,8 +174,7 @@ public class InternshipManager implements InternshipOperations {
         sc.nextLine();
 
         System.out.print("Duration (months): ");
-        int duration = sc.nextInt();
-        sc.nextLine();
+        String duration = sc.nextLine();
 
         // Concept Used: Object Creation
         // Create Internship object with auto-generated ID
@@ -204,7 +246,7 @@ public class InternshipManager implements InternshipOperations {
 
         System.out.print("Duration in months (" + existing.getDuration() + "): ");
         String durStr = sc.nextLine();
-        int duration = durStr.isEmpty() ? existing.getDuration() : Integer.parseInt(durStr);
+        String duration = durStr.isEmpty() ? existing.getDuration() : durStr;
 
         // Concept Used: Object Creation
         // Create updated internship object

@@ -14,7 +14,8 @@ import java.util.ArrayList;
 public class ProfilePanel extends JPanel {
 
     private AppFrame frame;
-    private JTextField skillsField, interestsField, locationField;
+    private JTextField nameField, ageField, degreeField, cgpaField, skillsField, interestsField, locationField;
+    private JPasswordField passwordField;
 
     public ProfilePanel(AppFrame frame) {
         this.frame = frame;
@@ -88,12 +89,32 @@ public class ProfilePanel extends JPanel {
         cgb.insets = new Insets(24, 0, 8, 0);
         card.add(editTitle, cgb);
 
-        JLabel editDesc = new JLabel("Update your skills, interests, and preferred location.");
+        JLabel editDesc = new JLabel("Update your profile information. All fields are editable.");
         editDesc.setFont(AppFrame.SMALL_FONT);
         editDesc.setForeground(AppFrame.TEXT_SEC);
         cgb.gridy++;
         cgb.insets = new Insets(0, 0, 16, 0);
         card.add(editDesc, cgb);
+
+        nameField = new JTextField(25);
+        nameField.setText(s.getName());
+        nameField.setMaximumSize(new Dimension(400, 36));
+        cgb = addEditField(cgb, card, "Name", nameField);
+
+        ageField = new JTextField(25);
+        ageField.setText(String.valueOf(s.getAge()));
+        ageField.setMaximumSize(new Dimension(400, 36));
+        cgb = addEditField(cgb, card, "Age", ageField);
+
+        degreeField = new JTextField(25);
+        degreeField.setText(s.getDegree());
+        degreeField.setMaximumSize(new Dimension(400, 36));
+        cgb = addEditField(cgb, card, "Degree", degreeField);
+
+        cgpaField = new JTextField(25);
+        cgpaField.setText(String.valueOf(s.getCgpa()));
+        cgpaField.setMaximumSize(new Dimension(400, 36));
+        cgb = addEditField(cgb, card, "CGPA", cgpaField);
 
         skillsField = new JTextField(25);
         skillsField.setText(s.getSkills());
@@ -109,6 +130,10 @@ public class ProfilePanel extends JPanel {
         locationField.setText(s.getPreferredLocation());
         locationField.setMaximumSize(new Dimension(400, 36));
         cgb = addEditField(cgb, card, "Preferred Location", locationField);
+
+        passwordField = new JPasswordField(25);
+        passwordField.setMaximumSize(new Dimension(400, 36));
+        cgb = addEditField(cgb, card, "Password", passwordField);
 
         cgb.gridx = 0;
         cgb.gridy = 0;
@@ -202,22 +227,93 @@ public class ProfilePanel extends JPanel {
             return;
         }
 
+        String name = nameField.getText().trim();
+        String ageText = ageField.getText().trim();
+        String degree = degreeField.getText().trim();
+        String cgpaText = cgpaField.getText().trim();
         String skills = skillsField.getText().trim();
         String interests = interestsField.getText().trim();
         String location = locationField.getText().trim();
+        String password = new String(passwordField.getPassword()).trim();
 
-        if (skills.isEmpty() || interests.isEmpty() || location.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "All editable fields are required.",
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Name is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (ageText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Age is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int age;
+        try {
+            age = Integer.parseInt(ageText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Age must be a valid number.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (age < 16 || age > 60) {
+            JOptionPane.showMessageDialog(this, "Age must be between 16 and 60.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (degree.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Degree is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (cgpaText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "CGPA is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        double cgpa;
+        try {
+            cgpa = Double.parseDouble(cgpaText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "CGPA must be a number.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (cgpa < 0 || cgpa > 10) {
+            JOptionPane.showMessageDialog(this, "CGPA must be between 0 and 10.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (skills.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Skills are required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (interests.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Interests are required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (location.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preferred location is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Password cannot be empty.",
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        s.setName(name);
+        s.setAge(age);
+        s.setDegree(degree);
+        s.setCgpa(Double.parseDouble(cgpaText));
         s.setSkills(skills);
         s.setInterests(interests);
         s.setPreferredLocation(location);
+        s.setPassword(password);
         StudentStorage.saveStudent(s);
         frame.showProfile();
-        JOptionPane.showMessageDialog(this, "Profile Updated Successfully!",
+        JOptionPane.showMessageDialog(this, "Profile updated successfully.",
             "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
