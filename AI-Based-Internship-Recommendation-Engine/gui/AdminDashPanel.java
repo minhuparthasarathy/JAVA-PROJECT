@@ -117,12 +117,14 @@ public class AdminDashPanel extends JPanel {
         btnRow.setBackground(AppFrame.SURFACE);
         btnRow.setLayout(new GridLayout(1, 2, 10, 10));
 
-        JButton addBtn = createActionBtn("Add Internship", AppFrame.PRIMARY, e -> frame.showInternshipMgmt());
-        JButton viewBtn = createActionBtn("View All Internships", AppFrame.PRIMARY, e -> frame.showInternshipMgmt());
+        JButton addBtn = createActionBtn("Add Internship", AppFrame.PRIMARY, e -> frame.showAddInternship());
+        JButton viewBtn = createActionBtn("View All Internships", AppFrame.PRIMARY, e -> frame.showViewInternships());
+        JButton updateBtn = createActionBtn("Update Internship", AppFrame.PRIMARY_DARK, e -> frame.showUpdateInternship());
         JButton logoutBtn = createActionBtn("Logout", new Color(220, 38, 38), e -> frame.logout());
 
         btnRow.add(addBtn);
         btnRow.add(viewBtn);
+        btnRow.add(updateBtn);
         btnRow.add(logoutBtn);
 
         cgb.gridy = 4;

@@ -250,6 +250,11 @@ public class SearchPanel extends JPanel {
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        if (minCGPA < 0) {
+            JOptionPane.showMessageDialog(this, "Minimum CGPA cannot be negative.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         ArrayList<Internship> results = searchFilter.applyFilters(company, role, location, skills, minCGPA);
         refreshTable(results);
     }

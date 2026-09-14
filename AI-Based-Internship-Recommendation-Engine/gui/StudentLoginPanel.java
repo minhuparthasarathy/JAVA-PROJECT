@@ -145,8 +145,14 @@ public class StudentLoginPanel extends JPanel {
         String idText = idField.getText().trim();
         String password = new String(passField.getPassword()).trim();
 
-        if (idText.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter Student ID and Password.",
+        if (idText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Student ID is required.",
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Password is required.",
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -168,7 +174,7 @@ public class StudentLoginPanel extends JPanel {
                 "Success", JOptionPane.INFORMATION_MESSAGE);
             frame.showStudentDash();
         } else {
-            JOptionPane.showMessageDialog(this, "Invalid Credentials.",
+            JOptionPane.showMessageDialog(this, "Student ID is incorrect.",
                 "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
     }

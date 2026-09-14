@@ -146,6 +146,28 @@ public class UserManager implements UserOperations {
     }
 
     // Concept Used: Method
+    // Non-Scanner admin authentication for Swing GUI integration
+    // Returns true if credentials match
+    public boolean authenticateAdmin(String username, String password) {
+
+        if (username == null || username.isEmpty()) {
+            return false;
+        }
+        if (password == null || password.isEmpty()) {
+            return false;
+        }
+        if (username.equals(adminUsername) &&
+            password.equals(adminPassword)) {
+
+            isAdminLoggedIn = true;
+            return true;
+
+        }
+        return false;
+
+    }
+
+    // Concept Used: Method
     // Returns whether an admin is currently authenticated
     public boolean isAdminAuthenticated() {
 

@@ -11,13 +11,13 @@ public class Internship {
     private double requiredCGPA;
     private String location;
     private double stipend;
-    private int duration; // Duration in months
+    private String duration;
 
     // Concept Used: Constructor
     // Parameterized constructor to initialize all attributes
     public Internship(int id, String company, String role,
                       String requiredSkills, double requiredCGPA,
-                      String location, double stipend, int duration) {
+                      String location, double stipend, String duration) {
 
         this.id = id;
         this.company = company;
@@ -89,11 +89,11 @@ public class Internship {
         this.stipend = stipend;
     }
 
-    public int getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 

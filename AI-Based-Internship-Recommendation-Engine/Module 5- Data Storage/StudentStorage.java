@@ -67,7 +67,7 @@ public class StudentStorage {
             writer.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null,
-                "Error saving student data: " + e.getMessage(),
+                "Unable to save student data. Please check file permissions.\nError: " + e.getMessage(),
                 "Storage Error", JOptionPane.ERROR_MESSAGE);
         }
     }

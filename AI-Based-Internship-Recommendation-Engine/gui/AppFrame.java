@@ -35,6 +35,8 @@ public class AppFrame extends JFrame {
     private AdminLoginPanel adminLoginPanel;
     private AdminDashPanel adminDashPanel;
     private InternshipMgmtPanel internshipMgmtPanel;
+    private ViewInternshipsPanel viewInternshipsPanel;
+    private UpdateInternshipPanel updateInternshipPanel;
     private SearchPanel searchPanel;
 
     public static final Color PRIMARY = new Color(37, 99, 235);
@@ -168,6 +170,8 @@ public class AppFrame extends JFrame {
         adminLoginPanel = new AdminLoginPanel(this);
         adminDashPanel = new AdminDashPanel(this);
         internshipMgmtPanel = new InternshipMgmtPanel(this);
+        viewInternshipsPanel = new ViewInternshipsPanel(this);
+        updateInternshipPanel = new UpdateInternshipPanel(this);
         searchPanel = new SearchPanel(this);
 
         cards.add(welcomePanel, "welcome");
@@ -179,45 +183,15 @@ public class AppFrame extends JFrame {
         cards.add(adminLoginPanel, "adminLogin");
         cards.add(adminDashPanel, "adminDash");
         cards.add(internshipMgmtPanel, "internshipMgmt");
+        cards.add(viewInternshipsPanel, "viewInternships");
+        cards.add(updateInternshipPanel, "updateInternship");
         cards.add(searchPanel, "search");
 
         setLayout(new BorderLayout());
         add(cards, BorderLayout.CENTER);
 
-        // Load internship data from file
-        loadInternshipsFromFile();
         initializeDemoData();
         showWelcome();
-    }
-
-    private void loadInternshipsFromFile() {
-        try {
-            java.io.File file = new java.io.File("internships.txt");
-            if (!file.exists()) return;
-            Scanner fileScanner = new Scanner(file);
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine().trim();
-                if (line.isEmpty()) continue;
-                String[] parts = line.split("\\|");
-                if (parts.length == 8) {
-                    try {
-                        Internship intern = new Internship(
-                            Integer.parseInt(parts[0].trim()),
-                            parts[1].trim(), parts[2].trim(), parts[3].trim(),
-                            Double.parseDouble(parts[4].trim()),
-                            parts[5].trim(), Double.parseDouble(parts[6].trim()),
-                            Integer.parseInt(parts[7].trim())
-                        );
-                        internshipManager.addInternship(intern);
-                    } catch (NumberFormatException e) {
-                        // Skip malformed lines
-                    }
-                }
-            }
-            fileScanner.close();
-        } catch (java.io.FileNotFoundException e) {
-            // File not found - no pre-loaded internships
-        }
     }
 
     /**
@@ -243,7 +217,9 @@ public class AppFrame extends JFrame {
     public void showRecommendations() { recoPanel.refresh(); showPanel("recommendations"); }
     public void showAdminLogin() { showPanel("adminLogin"); }
     public void showAdminDash() { showPanel("adminDash"); }
-    public void showInternshipMgmt() { showPanel("internshipMgmt"); }
+    public void showAddInternship() { showPanel("internshipMgmt"); }
+    public void showViewInternships() { viewInternshipsPanel.refresh(); showPanel("viewInternships"); }
+    public void showUpdateInternship() { updateInternshipPanel.refresh(); showPanel("updateInternship"); }
     public void showSearch() { searchPanel.refresh(); showPanel("search"); }
 
     public void setCurrentStudent(Student s) { this.currentStudent = s; }

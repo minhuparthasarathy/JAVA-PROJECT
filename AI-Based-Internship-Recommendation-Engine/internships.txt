@@ -1,2 +1,11 @@
 1|TCS|SDE|java,python|8.5|chennai|20000.0|6
 2|Cisco|Tester|frontend,cpp|8.0|chennai|10000.0|3
+3|Infosys|Software Developer|java,python|7.5|bengaluru|18000.0|6
+4|Wipro|Data Analyst|sql,excel|7.0|hyderabad|15000.0|3
+5|Accenture|Web Developer|javascript,react|8.0|pune|22000.0|6
+6|Cognizant|Software Developer|java,sql|7.0|mumbai|16000.0|6
+7|Deloitte|Data Analyst|python,sql|8.5|noida|20000.0|3
+8|HCLTech|Web Developer|java,html|7.5|chennai|17000.0|6
+9|IBM|Software Developer|java,python,sql|8.0|bengaluru|25000.0|6
+10|TCS|Data Analyst|sql,python|7.0|pune|16000.0|3
+123|tata|tester|testing|9.0|delhi|800.0|2
