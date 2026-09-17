@@ -13,6 +13,8 @@ import java.util.ArrayList;
 public class RecoPanel extends JPanel {
 
     private AppFrame frame;
+    private JPanel center;
+    private SwingWorker<ArrayList<Recommendation>, Void> recoWorker;
 
     public RecoPanel(AppFrame frame) {
         this.frame = frame;
@@ -39,7 +41,7 @@ public class RecoPanel extends JPanel {
     }
 
     private JPanel createContent() {
-        JPanel center = new JPanel();
+        center = new JPanel();
         center.setBackground(AppFrame.BG);
         center.setLayout(new BorderLayout(0, 8));
         center.setBorder(new EmptyBorder(20, 24, 20, 24));
@@ -50,14 +52,102 @@ public class RecoPanel extends JPanel {
             return center;
         }
 
-        // Scrollable content
+        JLabel loadingLabel = new JLabel("Generating recommendations...");
+        loadingLabel.setFont(AppFrame.BODY_FONT);
+        loadingLabel.setForeground(AppFrame.TEXT_SEC);
+        loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        center.add(loadingLabel, BorderLayout.CENTER);
+
+        startRecommendationTask(s);
+
+        return center;
+    }
+
+    private void startRecommendationTask(Student s) {
+        if (recoWorker != null) {
+            recoWorker.cancel(true);
+            recoWorker = null;
+        }
+        recoWorker = new SwingWorker<ArrayList<Recommendation>, Void>() {
+            @Override
+            protected ArrayList<Recommendation> doInBackground() throws Exception {
+                return frame.getRecommendationEngine().generateRecommendations(s);
+            }
+
+        @Override
+        protected void done() {
+            if (isCancelled()) {
+                frame.setRecoButtonEnabled(true);
+                recoWorker = null;
+                return;
+            }
+            try {
+                ArrayList<Recommendation> recommendations = get();
+                replaceWithResults(recommendations);
+            } catch (Exception e) {
+                replaceWithError(e);
+            } finally {
+                frame.setRecoButtonEnabled(true);
+                recoWorker = null;
+            }
+        }
+        };
+        frame.setRecoButtonEnabled(false);
+        recoWorker.execute();
+    }
+
+    private void replaceWithResults(ArrayList<Recommendation> recommendations) {
+        remove(center);
+        center = buildResultsPanel(recommendations);
+        add(center, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
+
+    private void replaceWithError(Exception e) {
+        remove(center);
+        center = new JPanel();
+        center.setBackground(AppFrame.BG);
+        center.setLayout(new BorderLayout(0, 8));
+        center.setBorder(new EmptyBorder(20, 24, 20, 24));
+
+        String message = "Failed to load recommendations.";
+        if (e.getMessage() != null && !e.getMessage().isEmpty()) {
+            message += " " + e.getMessage();
+        }
+        JLabel errorLabel = new JLabel(
+            "<html><center>" + message + "<br>Please try again later.</center></html>");
+        errorLabel.setFont(AppFrame.BODY_FONT);
+        errorLabel.setForeground(AppFrame.ERROR);
+        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        center.add(errorLabel, BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setBackground(AppFrame.BG);
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        JButton backBtn = new JButton("Back to Dashboard");
+        AppFrame.styleBack(backBtn);
+        backBtn.addActionListener(e2 -> frame.showStudentDash());
+
+        bottomPanel.add(backBtn);
+        center.add(bottomPanel, BorderLayout.SOUTH);
+
+        add(center, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
+
+    private JPanel buildResultsPanel(ArrayList<Recommendation> recommendations) {
+        JPanel panel = new JPanel();
+        panel.setBackground(AppFrame.BG);
+        panel.setLayout(new BorderLayout(0, 8));
+        panel.setBorder(new EmptyBorder(20, 24, 20, 24));
+
         JPanel listPanel = new JPanel();
         listPanel.setBackground(AppFrame.BG);
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBorder(new EmptyBorder(0, 0, 16, 0));
-
-        ArrayList<Recommendation> recommendations =
-            frame.getRecommendationEngine().generateRecommendations(s);
 
         if (recommendations.isEmpty()) {
             JLabel noReco = new JLabel(
@@ -80,9 +170,8 @@ public class RecoPanel extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getVerticalScrollBar().setBlockIncrement(48);
-        center.add(scrollPane, BorderLayout.CENTER);
+        panel.add(scrollPane, BorderLayout.CENTER);
 
-        // Back button at bottom
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(AppFrame.BG);
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -92,9 +181,9 @@ public class RecoPanel extends JPanel {
         backBtn.addActionListener(e -> frame.showStudentDash());
 
         bottomPanel.add(backBtn);
-        center.add(bottomPanel, BorderLayout.SOUTH);
+        panel.add(bottomPanel, BorderLayout.SOUTH);
 
-        return center;
+        return panel;
     }
 
     /**

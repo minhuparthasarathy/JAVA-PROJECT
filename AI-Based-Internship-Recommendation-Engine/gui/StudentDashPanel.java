@@ -13,6 +13,7 @@ import java.awt.event.*;
 public class StudentDashPanel extends JPanel {
 
     private AppFrame frame;
+    private JButton recoBtn;
 
     public StudentDashPanel(AppFrame frame) {
         this.frame = frame;
@@ -139,7 +140,7 @@ public class StudentDashPanel extends JPanel {
         btnRow.setLayout(new GridLayout(2, 2, 10, 10));
 
         JButton profileBtn = createActionBtn("View Profile", AppFrame.PRIMARY, e -> frame.showProfile());
-        JButton recoBtn = createActionBtn("View Recommendations", AppFrame.PRIMARY, e -> frame.showRecommendations());
+        recoBtn = createActionBtn("View Recommendations", AppFrame.PRIMARY, e -> frame.showRecommendations());
         JButton internshipBtn = createActionBtn("Search & Filter", AppFrame.PRIMARY, e -> frame.showSearch());
         JButton logoutBtn = createActionBtn("Logout", new Color(220, 38, 38), e -> frame.logout());
 
@@ -196,6 +197,12 @@ public class StudentDashPanel extends JPanel {
         }
         btn.addActionListener(listener);
         return btn;
+    }
+
+    public void setRecoButtonEnabled(boolean enabled) {
+        if (recoBtn != null) {
+            recoBtn.setEnabled(enabled);
+        }
     }
 
     public void refresh() {

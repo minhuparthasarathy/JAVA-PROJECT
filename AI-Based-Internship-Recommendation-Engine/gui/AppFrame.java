@@ -208,6 +208,12 @@ public class AppFrame extends JFrame {
         userManager.students[userManager.count++] = demo;
     }
 
+    public StudentDashPanel getStudentDashPanel() { return studentDashPanel; }
+
+    public void setRecoButtonEnabled(boolean enabled) {
+        studentDashPanel.setRecoButtonEnabled(enabled);
+    }
+
     public void showPanel(String name) { cardLayout.show(cards, name); }
     public void showWelcome() { showPanel("welcome"); }
     public void showStudentLogin() { showPanel("studentLogin"); }

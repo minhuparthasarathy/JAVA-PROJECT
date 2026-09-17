@@ -44,6 +44,16 @@ public class RecommendationEngine {
         // Iterate through all internships to find matching ones
         for (Internship internship : internships) {
 
+            // Check CGPA eligibility first
+            if (student.getCgpa() < internship.getRequiredCGPA()) {
+                continue;
+            }
+
+            // Check skill compatibility - at least one skill must match
+            if (!hasSkillMatch(student, internship)) {
+                continue;
+            }
+
             // Concept Used: Method Calling
             // Calculate match score between student and this internship
             double score = calculateMatchScore(student, internship);
@@ -61,6 +71,46 @@ public class RecommendationEngine {
         }
 
         return recommendations;
+
+    }
+
+    // Concept Used: Method
+    // Checks if the student has at least one skill matching at least one required skill
+    // Used as a prerequisite for recommendation eligibility
+    private boolean hasSkillMatch(Student student, Internship internship) {
+
+        String studentSkillsRaw = student.getSkills();
+        String requiredSkillsRaw = internship.getRequiredSkills();
+
+        if (studentSkillsRaw == null || studentSkillsRaw.trim().isEmpty() ||
+            requiredSkillsRaw == null || requiredSkillsRaw.trim().isEmpty()) {
+
+            return false;
+
+        }
+
+        String[] studentSkills = studentSkillsRaw.split(",");
+        String[] requiredSkills = requiredSkillsRaw.split(",");
+
+        for (String ss : studentSkills) {
+
+            ss = ss.trim().toLowerCase();
+
+            for (String rs : requiredSkills) {
+
+                rs = rs.trim().toLowerCase();
+
+                if (ss.equals(rs)) {
+
+                    return true;
+
+                }
+
+            }
+
+        }
+
+        return false;
 
     }
 
@@ -90,9 +140,7 @@ public class RecommendationEngine {
         if (studentSkillsRaw == null || studentSkillsRaw.trim().isEmpty() ||
             requiredSkillsRaw == null || requiredSkillsRaw.trim().isEmpty()) {
 
-            // If only CGPA matches but no skills to compare, give base CGPA score
-            double cgpaScore = (student.getCgpa() / 10.0) * 40.0;
-            return cgpaScore;
+            return 0.0;
 
         }
 
@@ -137,6 +185,11 @@ public class RecommendationEngine {
         // Concept Used: Calculations - Percentage
         // Calculate skill match percentage (how many required skills the student has)
         double skillMatchPercentage = (double) matchCount / requiredSkills.length;
+
+        // If no skills match, do not recommend
+        if (matchCount == 0) {
+            return 0.0;
+        }
 
         // Concept Used: Calculations - Weighted Score
         // Skills contribute 60% of the total score
