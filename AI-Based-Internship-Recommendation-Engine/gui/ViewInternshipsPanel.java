@@ -36,6 +36,7 @@ public class ViewInternshipsPanel extends JPanel {
 
         JButton backBtn = new JButton("Back to Dashboard");
         AppFrame.styleBack(backBtn);
+        backBtn.setMaximumSize(new Dimension(160, 34));
         backBtn.addActionListener(e -> frame.showAdminDash());
 
         JPanel right = new JPanel();

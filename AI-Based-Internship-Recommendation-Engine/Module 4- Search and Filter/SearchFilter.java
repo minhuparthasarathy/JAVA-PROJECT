@@ -1,11 +1,34 @@
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SearchFilter {
 
     private ArrayList<Internship> allInternships;
 
+    // MODULE 8: HashMap for fast internship lookup by ID (O(1) vs O(n))
+    private HashMap<Integer, Internship> internshipMap;
+
     public SearchFilter(ArrayList<Internship> internships) {
         this.allInternships = new ArrayList<>(internships);
+        this.internshipMap = new HashMap<>();
+        for (Internship intern : internships) {
+            this.internshipMap.put(intern.getId(), intern);
+        }
+    }
+
+    private boolean containsIgnoreCase(String value, String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return true;
+        }
+        return value != null && value.trim().toLowerCase().contains(query.trim().toLowerCase());
+    }
+
+    // MODULE 8: Fast lookup by ID using HashMap
+    public Internship getInternshipById(int id) {
+        return internshipMap.get(id);
     }
 
     public ArrayList<Internship> searchByCompany(ArrayList<Internship> source, String query) {
@@ -16,7 +39,7 @@ public class SearchFilter {
         }
         String q = query.trim().toLowerCase();
         for (Internship intern : source) {
-            if (intern.getCompany() != null && intern.getCompany().toLowerCase().contains(q)) {
+            if (containsIgnoreCase(intern.getCompany(), q)) {
                 result.add(intern);
             }
         }
@@ -31,7 +54,7 @@ public class SearchFilter {
         }
         String q = query.trim().toLowerCase();
         for (Internship intern : source) {
-            if (intern.getRole() != null && intern.getRole().toLowerCase().contains(q)) {
+            if (containsIgnoreCase(intern.getRole(), q)) {
                 result.add(intern);
             }
         }
@@ -46,7 +69,8 @@ public class SearchFilter {
         }
         String q = query.trim().toLowerCase();
         for (Internship intern : source) {
-            if (intern.getLocation() != null && intern.getLocation().toLowerCase().contains(q)) {
+            String loc = intern.getLocation();
+            if (loc != null && loc.trim().toLowerCase().contains(q)) {
                 result.add(intern);
             }
         }
@@ -59,27 +83,31 @@ public class SearchFilter {
             result.addAll(source);
             return result;
         }
-        String[] searchSkills = query.trim().toLowerCase().split(",");
+        // MODULE 8: HashSet for efficient skill matching
+        Set<String> searchSkillSet = new HashSet<>();
+        for (String s : query.trim().toLowerCase().split(",")) {
+            String trimmed = s.trim();
+            if (!trimmed.isEmpty()) {
+                searchSkillSet.add(trimmed);
+            }
+        }
         for (Internship intern : source) {
             String required = intern.getRequiredSkills();
             if (required == null || required.trim().isEmpty()) {
                 continue;
             }
-            String[] requiredSkills = required.toLowerCase().split(",");
-            boolean match = false;
-            for (String ss : searchSkills) {
-                ss = ss.trim();
-                if (ss.isEmpty()) continue;
-                for (String rs : requiredSkills) {
-                    rs = rs.trim();
-                    if (ss.equals(rs)) {
-                        match = true;
-                        break;
-                    }
+            // MODULE 8: HashSet for efficient skill intersection
+            Set<String> requiredSkillSet = new HashSet<>();
+            for (String s : required.toLowerCase().split(",")) {
+                String trimmed = s.trim();
+                if (!trimmed.isEmpty()) {
+                    requiredSkillSet.add(trimmed);
                 }
-                if (match) break;
             }
-            if (match) {
+            // Check if any search skill matches any required skill
+            Set<String> intersection = new HashSet<>(searchSkillSet);
+            intersection.retainAll(requiredSkillSet);
+            if (!intersection.isEmpty()) {
                 result.add(intern);
             }
         }
@@ -96,19 +124,76 @@ public class SearchFilter {
         return result;
     }
 
-    public ArrayList<Internship> applyFilters(String company, String role,
-                                               String location, String skills,
-                                               double minCGPA) {
-        ArrayList<Internship> result = new ArrayList<>(allInternships);
-        result = searchByCompany(result, company);
-        result = searchByRole(result, role);
+    // MODULE 8: Comparator for sorting by stipend (descending)
+    public static final Comparator<Internship> STIPEND_DESC = (a, b) -> Double.compare(b.getStipend(), a.getStipend());
+
+    // MODULE 8: Comparator for sorting by required CGPA (descending)
+    public static final Comparator<Internship> CGPA_DESC = (a, b) -> Double.compare(b.getRequiredCGPA(), a.getRequiredCGPA());
+
+    // MODULE 8: Comparator for sorting by company name (ascending)
+    public static final Comparator<Internship> COMPANY_ASC = (a, b) -> a.getCompany().compareToIgnoreCase(b.getCompany());
+
+    /**
+     * Sort internships using the specified comparator.
+     * MODULE 8: Uses Comparator with List.sort().
+     */
+    public void sortResults(ArrayList<Internship> list, Comparator<Internship> comparator) {
+        list.sort(comparator);
+    }
+
+    // MODULE 8: Unified search across company, role, location, and skills (OR logic)
+    // A single search term finds internships where ANY field matches
+    private boolean matchesSearch(Internship intern, String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return true;
+        }
+        String q = query.trim().toLowerCase();
+        return containsIgnoreCase(intern.getCompany(), q)
+                || containsIgnoreCase(intern.getRole(), q)
+                || containsIgnoreCase(intern.getLocation(), q)
+                || containsIgnoreCase(intern.getRequiredSkills(), q);
+    }
+
+    public List<Internship> applyFilters(String search, String location,
+                                         String skills, double minCGPA) {
+        ArrayList<Internship> result = new ArrayList<>();
+        for (Internship intern : allInternships) {
+            if (!matchesSearch(intern, search)) {
+                continue;
+            }
+            result.add(intern);
+        }
         result = filterByLocation(result, location);
         result = filterBySkill(result, skills);
-        result = filterByMinimumCGPA(result, minCGPA);
+        if (minCGPA > 0) {
+            result = filterByMinimumCGPA(result, minCGPA);
+        }
         return result;
     }
 
-    public ArrayList<Internship> clearFilters() {
+    // MODULE 8: Separate company and role criteria preserve partial OR search behavior.
+    public List<Internship> applyFilters(String company, String role, String location,
+                                         String skills, double minCGPA) {
+        ArrayList<Internship> result = new ArrayList<>();
+        for (Internship intern : allInternships) {
+            boolean companyMatches = company == null || company.trim().isEmpty()
+                    || containsIgnoreCase(intern.getCompany(), company);
+            boolean roleMatches = role == null || role.trim().isEmpty()
+                    || containsIgnoreCase(intern.getRole(), role);
+            if (!companyMatches && !roleMatches) {
+                continue;
+            }
+            result.add(intern);
+        }
+        result = filterByLocation(result, location);
+        result = filterBySkill(result, skills);
+        if (minCGPA > 0) {
+            result = filterByMinimumCGPA(result, minCGPA);
+        }
+        return result;
+    }
+
+    public List<Internship> clearFilters() {
         return new ArrayList<>(allInternships);
     }
 }

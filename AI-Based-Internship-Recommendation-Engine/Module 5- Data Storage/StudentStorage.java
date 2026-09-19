@@ -39,7 +39,26 @@ public class StudentStorage {
                             parts[5].trim(),
                             parts[6].trim(),
                             parts[7].trim(),
-                            parts[8].trim()
+                            parts[8].trim(),
+                            0
+                        );
+                        students.add(s);
+                    } catch (NumberFormatException e) {
+                        // Skip malformed lines
+                    }
+                } else if (parts.length == 10) {
+                    try {
+                        Student s = new Student(
+                            Integer.parseInt(parts[0].trim()),
+                            parts[1].trim(),
+                            Integer.parseInt(parts[2].trim()),
+                            parts[3].trim(),
+                            Double.parseDouble(parts[4].trim()),
+                            parts[5].trim(),
+                            parts[6].trim(),
+                            parts[7].trim(),
+                            parts[9].trim(),
+                            Double.parseDouble(parts[8].trim())
                         );
                         students.add(s);
                     } catch (NumberFormatException e) {

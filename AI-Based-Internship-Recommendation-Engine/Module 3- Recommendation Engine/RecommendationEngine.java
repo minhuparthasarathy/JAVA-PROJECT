@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 // Concept Used: Class
 // RecommendationEngine generates personalized internship recommendations for students
@@ -78,40 +80,40 @@ public class RecommendationEngine {
     // Checks if the student has at least one skill matching at least one required skill
     // Used as a prerequisite for recommendation eligibility
     private boolean hasSkillMatch(Student student, Internship internship) {
+        return getMatchingSkillCount(student, internship) > 0;
+    }
 
+    // MODULE 8: Parses and returns normalized skill sets to avoid duplicate parsing
+    private void parseSkillSets(Student student, Internship internship,
+                                Set<String> studentSkillSet, Set<String> requiredSkillSet) {
         String studentSkillsRaw = student.getSkills();
         String requiredSkillsRaw = internship.getRequiredSkills();
 
-        if (studentSkillsRaw == null || studentSkillsRaw.trim().isEmpty() ||
-            requiredSkillsRaw == null || requiredSkillsRaw.trim().isEmpty()) {
-
-            return false;
-
-        }
-
-        String[] studentSkills = studentSkillsRaw.split(",");
-        String[] requiredSkills = requiredSkillsRaw.split(",");
-
-        for (String ss : studentSkills) {
-
-            ss = ss.trim().toLowerCase();
-
-            for (String rs : requiredSkills) {
-
-                rs = rs.trim().toLowerCase();
-
-                if (ss.equals(rs)) {
-
-                    return true;
-
+        if (studentSkillsRaw != null && !studentSkillsRaw.trim().isEmpty()) {
+            for (String s : studentSkillsRaw.split(",")) {
+                String trimmed = s.trim().toLowerCase();
+                if (!trimmed.isEmpty()) {
+                    studentSkillSet.add(trimmed);
                 }
-
             }
-
         }
+        if (requiredSkillsRaw != null && !requiredSkillsRaw.trim().isEmpty()) {
+            for (String s : requiredSkillsRaw.split(",")) {
+                String trimmed = s.trim().toLowerCase();
+                if (!trimmed.isEmpty()) {
+                    requiredSkillSet.add(trimmed);
+                }
+            }
+        }
+    }
 
-        return false;
-
+    // Returns count of matching skills between student and internship
+    private int getMatchingSkillCount(Student student, Internship internship) {
+        Set<String> studentSkillSet = new HashSet<>();
+        Set<String> requiredSkillSet = new HashSet<>();
+        parseSkillSets(student, internship, studentSkillSet, requiredSkillSet);
+        studentSkillSet.retainAll(requiredSkillSet);
+        return studentSkillSet.size();
     }
 
     // Concept Used: Method
@@ -131,65 +133,27 @@ public class RecommendationEngine {
 
         }
 
-        // Concept Used: String Handling - Skills Comparison
-        // Step 1: Get and normalize skills strings
-        String studentSkillsRaw = student.getSkills();
-        String requiredSkillsRaw = internship.getRequiredSkills();
+        // MODULE 8: Use shared skill parsing to avoid duplicate work
+        Set<String> studentSkillSet = new HashSet<>();
+        Set<String> requiredSkillSet = new HashSet<>();
+        parseSkillSets(student, internship, studentSkillSet, requiredSkillSet);
 
-        // Handle null or empty skills
-        if (studentSkillsRaw == null || studentSkillsRaw.trim().isEmpty() ||
-            requiredSkillsRaw == null || requiredSkillsRaw.trim().isEmpty()) {
-
+        // If no skills on either side, no match
+        if (studentSkillSet.isEmpty() || requiredSkillSet.isEmpty()) {
             return 0.0;
-
         }
 
-        // Concept Used: String Handling - split(), trim(), toLowerCase()
-        // Split skills by comma, trim whitespace, and convert to lowercase
-        String[] studentSkills = studentSkillsRaw.split(",");
-        String[] requiredSkills = requiredSkillsRaw.split(",");
+        // Check intersection for skill match count
+        studentSkillSet.retainAll(requiredSkillSet);
+        int matchCount = studentSkillSet.size();
 
-        // Trim and lowercase all skills for case-insensitive comparison
-        for (int i = 0; i < studentSkills.length; i++) {
-
-            studentSkills[i] = studentSkills[i].trim().toLowerCase();
-
-        }
-
-        for (int i = 0; i < requiredSkills.length; i++) {
-
-            requiredSkills[i] = requiredSkills[i].trim().toLowerCase();
-
-        }
-
-        // Concept Used: String Handling - Matching
-        // Count how many of the student's skills match the required skills
-        int matchCount = 0;
-
-        for (String studentSkill : studentSkills) {
-
-            for (String requiredSkill : requiredSkills) {
-
-                // Concept Used: String Methods - equals()
-                if (studentSkill.equals(requiredSkill)) {
-
-                    matchCount++;
-                    break; // Count each student skill only once
-
-                }
-
-            }
-
-        }
-
-        // Concept Used: Calculations - Percentage
-        // Calculate skill match percentage (how many required skills the student has)
-        double skillMatchPercentage = (double) matchCount / requiredSkills.length;
-
-        // If no skills match, do not recommend
+        // If no skills match, do not recommend (high CGPA cannot compensate)
         if (matchCount == 0) {
             return 0.0;
         }
+
+        // Calculate skill match percentage
+        double skillMatchPercentage = (double) matchCount / requiredSkillSet.size();
 
         // Concept Used: Calculations - Weighted Score
         // Skills contribute 60% of the total score
@@ -199,9 +163,29 @@ public class RecommendationEngine {
         // Normalize CGPA against maximum possible (10.0)
         double cgpaScore = (student.getCgpa() / 10.0) * 40.0;
 
+        // Total match score
+        double score = skillScore + cgpaScore;
+
+        // MODULE 8: Location preference (case-insensitive, trimmed)
+        String studentLocation = student.getPreferredLocation();
+        String internshipLocation = internship.getLocation();
+        if (studentLocation != null && !studentLocation.trim().isEmpty()
+                && internshipLocation != null && !internshipLocation.trim().isEmpty()) {
+            if (!studentLocation.trim().equalsIgnoreCase(internshipLocation.trim())) {
+                // Location mismatch - reduce score slightly but do not reject
+                score *= 0.9;
+            }
+        }
+
+        // MODULE 8: Stipend preference - reduce score if student expected stipend exceeds internship stipend
+        double studentStipend = student.getPreferredStipend();
+        if (studentStipend > 0 && internship.getStipend() < studentStipend) {
+            score *= 0.9;
+        }
+
         // Concept Used: Method Return
         // Total match score = skills (60%) + CGPA (40%)
-        return skillScore + cgpaScore;
+        return score;
 
     }
 

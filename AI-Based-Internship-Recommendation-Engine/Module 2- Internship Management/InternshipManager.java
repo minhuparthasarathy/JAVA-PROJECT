@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileReader;
@@ -13,6 +14,9 @@ public class InternshipManager implements InternshipOperations {
     // Concept Used: Collections (ArrayList)
     // ArrayList dynamically stores Internship objects
     private ArrayList<Internship> internships;
+
+    // MODULE 8: HashMap for fast internship lookup by ID (O(1) vs O(n))
+    private HashMap<Integer, Internship> internshipMap;
 
     // Concept Used: Object Creation
     private Scanner sc;
@@ -28,6 +32,7 @@ public class InternshipManager implements InternshipOperations {
     public InternshipManager(UserManager userManager) {
 
         internships = new ArrayList<>();
+        internshipMap = new HashMap<>();
         sc = new Scanner(System.in);
         nextId = 1;
         this.userManager = userManager;
@@ -38,6 +43,10 @@ public class InternshipManager implements InternshipOperations {
     // Concept Used: Method - File I/O (Integration with Module 5)
     // Loads internship data from internships.txt
     public void loadFromFile() {
+        // MODULE 8: Rebuild both collections from file so they stay synchronized.
+        internships.clear();
+        internshipMap.clear();
+        nextId = 1;
         try {
             File file = new File("internships.txt");
             if (!file.exists()) {
@@ -59,7 +68,18 @@ public class InternshipManager implements InternshipOperations {
                         String location = parts[5].trim();
                         double stipend = Double.parseDouble(parts[6].trim());
                         String duration = parts[7].trim();
-                        internships.add(new Internship(id, company, role, skills, cgpa, location, stipend, duration));
+                        // MODULE 8: One Internship instance is shared by ArrayList and HashMap.
+                        Internship internship = new Internship(id, company, role, skills, cgpa, location, stipend, duration);
+                        Internship existing = internshipMap.get(id);
+                        if (existing != null) {
+                            int index = internships.indexOf(existing);
+                            if (index >= 0) {
+                                internships.set(index, internship);
+                            }
+                        } else {
+                            internships.add(internship);
+                        }
+                        internshipMap.put(id, internship);
                         if (id >= nextId) {
                             nextId = id + 1;
                         }
@@ -192,8 +212,20 @@ public class InternshipManager implements InternshipOperations {
     @Override
     public void addInternship(Internship internship) {
 
-        // Concept Used: Collections - ArrayList
-        internships.add(internship);
+        // MODULE 8: ArrayList remains the main collection; HashMap indexes the same object.
+        Internship existing = getInternshipById(internship.getId());
+        if (existing != null) {
+            int index = internships.indexOf(existing);
+            if (index >= 0) {
+                internships.set(index, internship);
+            }
+        } else {
+            internships.add(internship);
+        }
+        internshipMap.put(internship.getId(), internship);
+        if (internship.getId() >= nextId) {
+            nextId = internship.getId() + 1;
+        }
         System.out.println("\nInternship Added Successfully!");
 
         // Concept Used: Method Calling
@@ -208,8 +240,8 @@ public class InternshipManager implements InternshipOperations {
         int id = sc.nextInt();
         sc.nextLine();
 
-        // Find internship by ID
-        Internship existing = findInternshipById(id);
+        // MODULE 8: HashMap lookup replaces the ArrayList ID scan.
+        Internship existing = getInternshipById(id);
 
         if (existing == null) {
 
@@ -262,26 +294,20 @@ public class InternshipManager implements InternshipOperations {
     @Override
     public void updateInternship(int id, Internship updatedInternship) {
 
-        // Concept Used: Collections - ArrayList traversal
-        for (int i = 0; i < internships.size(); i++) {
-
-            Internship intern = internships.get(i);
-
-            if (intern.getId() == id) {
-
-                // Replace with updated object
-                internships.set(i, updatedInternship);
-                System.out.println("\nInternship Updated Successfully!");
-
-                // Concept Used: Method Calling
-                saveInternshipsToFile();
-                return;
-
-            }
-
+        // MODULE 8: HashMap provides O(1) lookup before updating the ArrayList.
+        Internship existing = getInternshipById(id);
+        if (existing == null) {
+            System.out.println("Internship not found with ID: " + id);
+            return;
         }
 
-        System.out.println("Internship not found with ID: " + id);
+        int index = internships.indexOf(existing);
+        if (index >= 0) {
+            internships.set(index, updatedInternship);
+            internshipMap.put(id, updatedInternship);
+            System.out.println("\nInternship Updated Successfully!");
+            saveInternshipsToFile();
+        }
 
     }
 
@@ -301,32 +327,15 @@ public class InternshipManager implements InternshipOperations {
     @Override
     public void deleteInternship(int id) {
 
-        // Concept Used: Collections - ArrayList traversal with removal
-        Internship toRemove = null;
-
-        for (Internship intern : internships) {
-
-            if (intern.getId() == id) {
-
-                toRemove = intern;
-                break;
-
-            }
-
-        }
-
+        // MODULE 8: HashMap removes the need for an ArrayList scan during lookup.
+        Internship toRemove = getInternshipById(id);
         if (toRemove != null) {
-
             internships.remove(toRemove);
+            internshipMap.remove(id);
             System.out.println("\nInternship Deleted Successfully!");
-
-            // Concept Used: Method Calling
             saveInternshipsToFile();
-
         } else {
-
             System.out.println("Internship not found with ID: " + id);
-
         }
 
     }
@@ -384,23 +393,9 @@ public class InternshipManager implements InternshipOperations {
 
     }
 
-    // Concept Used: Method
-    // Helper method to find an internship by its ID
-    private Internship findInternshipById(int id) {
-
-        // Concept Used: Collections - ArrayList traversal
-        for (Internship intern : internships) {
-
-            if (intern.getId() == id) {
-
-                return intern;
-
-            }
-
-        }
-
-        return null;
-
+    // MODULE 8: Fast lookup by ID using HashMap (O(1) vs O(n) ArrayList traversal)
+    public Internship getInternshipById(int id) {
+        return internshipMap.get(id);
     }
 
     // Concept Used: Method
