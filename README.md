@@ -2,31 +2,41 @@
 
 ## Project Overview
 
-The **AI-Based Internship Recommendation Engine for PM Internship Scheme** is a Java-based command-line application designed to help students find suitable internship opportunities based on their skills, interests, academic background, and location preferences.
+The **AI-Based Internship Recommendation Engine for PM Internship Scheme** is a Java-based application designed to help students find suitable internship opportunities based on their academic profile, skills, interests, location preferences, and stipend preferences.
 
-The system aims to simplify the internship selection process by providing personalized internship recommendations and reducing the difficulty of searching through a large number of internship opportunities.
+The system provides personalized internship recommendations while also allowing students to search and filter available internship opportunities manually.
+
+The application uses a **Java Swing graphical user interface** with a simple, user-friendly design suitable for students with different levels of digital familiarity.
 
 ---
 
 ## Objective
 
 * Help students identify internships that match their skills and interests.
-* Provide personalized internship suggestions.
-* Reduce the time required to search for suitable opportunities.
-* Create a simple and user-friendly system for students from different backgrounds.
+* Provide personalized internship recommendations.
+* Reduce the time required to search for suitable internship opportunities.
+* Consider academic eligibility, skills, location, and stipend preferences.
+* Provide a simple and user-friendly interface.
+* Demonstrate the practical application of Java Object-Oriented Programming and Collections concepts.
 
 ---
 
-## Features
+# Features
 
-### Student Features
+## Student Features
 
 * Student Registration
 * Student Login
 * View Profile
 * Update Profile
+* Change Password
+* Preferred Location
+* Preferred Stipend
+* Personalized Internship Recommendations
+* Internship Search
+* Internship Filtering
 
-Student information stored:
+Student information includes:
 
 * Student ID
 * Name
@@ -36,18 +46,34 @@ Student information stored:
 * Skills
 * Interests
 * Preferred Location
+* Preferred Stipend
 * Password
 
-### Admin Features
+## Admin Features
 
 * Admin Login
-* Manage internship-related information
+* Add Internship
+* Update Internship
+* Delete Internship
+* View Internship Details
+* Manage Internship Records
+
+## Recommendation Features
+
+The recommendation engine evaluates internships based on:
+
+* CGPA eligibility
+* Skill matching
+* Location preference
+* Preferred stipend
+
+A student must satisfy the required CGPA and have at least one matching skill for an internship to be considered eligible.
 
 ---
 
 # Project Structure
 
-```
+```text
 AI-Based-Internship-Recommendation-Engine/
 
 │
@@ -61,18 +87,38 @@ AI-Based-Internship-Recommendation-Engine/
 │   └── UserOperations.java
 │
 ├── Module 2- Internship Management/
+│   ├── Internship.java
+│   ├── InternshipManager.java
+│   └── InternshipOperations.java
 │
 ├── Module 3- Recommendation Engine/
+│   └── RecommendationEngine.java
 │
 ├── Module 4- Search and Filter/
+│   └── SearchFilter.java
 │
 ├── Module 5- Data Storage/
+│   └── StudentStorage.java
 │
 ├── Module 6- Validation and Exception Handling/
 │
 ├── Module 7- Background Processing/
 │
-└── Module 8- Collections and Optimization/
+├── Module 8- Collections and Optimization/
+│
+├── gui/
+│   ├── AdminDashPanel.java
+│   ├── AdminLoginPanel.java
+│   ├── ProfilePanel.java
+│   ├── SearchPanel.java
+│   ├── StudentDashPanel.java
+│   ├── StudentLoginPanel.java
+│   ├── StudentRegPanel.java
+│   ├── UpdateInternshipPanel.java
+│   └── ViewInternshipsPanel.java
+│
+├── internships.txt
+└── students.txt
 ```
 
 ---
@@ -81,17 +127,18 @@ AI-Based-Internship-Recommendation-Engine/
 
 ## Module 1: User Management
 
-This module manages users of the system.
+This module manages students and administrators in the system.
 
-Implemented Features:
+### Implemented Features
 
 * Student Registration
 * Student Login
 * Admin Login
 * View Profile
 * Update Profile
+* Password Management
 
-Java Concepts Used:
+### Java Concepts Used
 
 * Classes
 * Objects
@@ -100,6 +147,9 @@ Java Concepts Used:
 * Arrays
 * Strings
 * Encapsulation
+* Inheritance
+* Interfaces
+* Polymorphism
 
 ---
 
@@ -107,15 +157,18 @@ Java Concepts Used:
 
 This module manages internship information handled by administrators.
 
-Planned Features:
+### Implemented Features
 
 * Add Internship
 * Update Internship
 * Delete Internship
 * View Internship Details
+* Internship ID-based lookup
+* File-based internship persistence
 
-Internship Data:
+### Internship Data
 
+* Internship ID
 * Company Name
 * Role
 * Required Skills
@@ -124,13 +177,15 @@ Internship Data:
 * Stipend
 * Duration
 
-Java Concepts Used:
+### Java Concepts Used
 
 * Classes
 * Objects
 * Methods
 * String Handling
-* Collections
+* ArrayList
+* HashMap
+* File Handling
 
 ---
 
@@ -138,140 +193,210 @@ Java Concepts Used:
 
 This is the core module of the project that generates personalized internship recommendations.
 
-The system compares student profiles with available internships and assigns matching scores.
+The system compares student profiles with available internships and calculates a matching score.
 
-Planned Features:
+### Implemented Features
 
 * Skill matching
-* CGPA matching
-* Location matching
-* Internship ranking
-* Top internship suggestions
+* CGPA eligibility
+* Location preference
+* Preferred stipend consideration
+* Match score calculation
+* Internship recommendations
+* Skill comparison
 
-Java Concepts Used:
+Skill matching is performed using case-insensitive and whitespace-tolerant comparisons.
 
-* Loops
+### Java Concepts Used
+
 * Methods
+* Loops
 * Arrays
-* Sorting
-* Streams API
-* Lambda Expressions
+* ArrayList
+* HashSet
+* String Handling
+* Object-Oriented Programming
 
 ---
 
 ## Module 4: Search and Filter
 
-This module allows students to manually search for internships.
+This module allows students to manually search and filter internship opportunities.
 
-Planned Filters:
+### Implemented Features
 
-* Skills
-* Company
-* Location
-* Minimum CGPA
+* Search by company
+* Search by role
+* Search by location
+* Search by required skills
+* Minimum CGPA filtering
+* Partial search
+* Case-insensitive search
+* Combined filtering
+* Internship sorting
 
-Java Concepts Used:
+### Java Concepts Used
 
 * String Handling
 * Collections
-* Iterators
-* Streams API
+* ArrayList
+* HashSet
+* Comparator
+* List sorting
 
 ---
 
 ## Module 5: Data Storage
 
-This module manages storing and retrieving application data.
+This module manages persistent application data using Java File I/O.
 
-Planned Implementation:
+### Implemented Features
+
+* Student data storage
+* Student data retrieval
+* Internship data storage
+* Internship data retrieval
+* Profile persistence
+* Preferred stipend persistence
+* Backward compatibility for older student records
+
+### Data Files
+
+* `students.txt`
+* `internships.txt`
+
+### Java Concepts Used
 
 * File Handling
-* MySQL Database Integration
-
-Stored Data:
-
-* Student Details
-* Internship Details
-
-Java Concepts Used:
-
-* File Handling
+* FileReader
+* FileWriter
 * BufferedReader
 * BufferedWriter
-* JDBC
+* ArrayList
+* Exception Handling
 
 ---
 
 ## Module 6: Validation and Exception Handling
 
-This module ensures reliable system operation.
+This module ensures reliable system operation by validating user input and handling errors.
 
-Handles:
+### Implemented Features
 
-* Invalid inputs
-* Missing information
-* Incorrect credentials
-* Data validation
+* Input validation
+* Required field validation
+* Numeric validation
+* CGPA validation
+* Stipend validation
+* Credential validation
+* Internship validation
+* Exception handling
+* User-friendly error messages
 
-Java Concepts Used:
+### Java Concepts Used
 
-* try
-* catch
-* finally
-* throw
-* throws
+* `try`
+* `catch`
+* `finally`
+* `throw`
+* `throws`
 * Custom Exceptions
 
 ---
 
 ## Module 7: Background Processing
 
-This module handles tasks that can run in the background.
+This module handles time-consuming recommendation processing without blocking the graphical user interface.
 
-Examples:
+### Implemented Features
 
-* Recommendation generation
-* Automatic data saving
-* Loading processes
+* Background recommendation generation
+* Non-blocking GUI operations
+* Recommendation processing status
+* Button state management during processing
 
-Java Concepts Used:
+### Java Concepts Used
 
 * Threads
-* Thread Lifecycle
-* Synchronization
-* Concurrent Programming
+* `SwingWorker`
+* Background Processing
+* Event Dispatch Thread (EDT)
 
 ---
 
 ## Module 8: Collections and Optimization
 
-This module improves data management efficiency using Java Collections.
+This module improves the efficiency and organization of data processing using Java Collections.
 
-Collections Used:
+### Implemented Features
 
-* ArrayList for storing students and internships
-* HashSet for managing unique skills
-* HashMap for quick student lookup
-* Queue for managing recent registrations
+* `ArrayList` for internship records
+* `HashMap<Integer, Internship>` for fast internship ID lookup
+* `HashSet` for efficient skill matching
+* Synchronized internship collections during CRUD operations
+* Efficient internship lookup
+* Collection-based filtering
+* Comparator-based sorting
+* Partial and case-insensitive search
+* Optimized recommendation skill matching
 
-Java Concepts Used:
+### Java Concepts Used
 
 * Collections Framework
 * Lists
 * Sets
 * Maps
-* Queues
-* Iterators
+* `HashMap`
+* `HashSet`
+* `Comparator`
+* `List.sort()`
+* Generics
+
+---
+
+# Graphical User Interface
+
+The application uses **Java Swing** for its graphical user interface.
+
+The interface provides:
+
+* Student registration and login screens
+* Student dashboard
+* Profile management
+* Internship recommendations
+* Internship search
+* Admin dashboard
+* Internship management
+* Internship update and viewing screens
+* Simple white and blue government-portal-style interface
+* User-friendly input forms
+* Background recommendation processing
 
 ---
 
 # Technologies Used
 
 * Java
-* Object-Oriented Programming Concepts
-* Command Line Interface
-* File Handling
-* MySQL Database (Planned)
+* Java Swing
+* Object-Oriented Programming
+* Java Collections Framework
+* File I/O
+* Exception Handling
+* `SwingWorker`
+* Git and GitHub
+
+---
+
+# Data Storage
+
+The application currently uses text files for persistent storage.
+
+```text
+students.txt
+internships.txt
+```
+
+Student and internship information is loaded when the application starts and saved when records are created or updated.
 
 ---
 
@@ -286,10 +411,14 @@ git clone https://github.com/minhuparthasarathy/JAVA-PROJECT.git
 ## Navigate to Project Folder
 
 ```bash
-cd JAVA-PROJECT
+cd JAVA-PROJECT/AI-Based-Internship-Recommendation-Engine
 ```
 
 ## Compile the Application
+
+On Windows, compile the Java source files according to the project structure.
+
+For example:
 
 ```bash
 javac Main.java
@@ -305,12 +434,9 @@ java Main
 
 # Development Status
 
-Completed:
+## Completed
 
 * Module 1 - User Management
-
-In Progress:
-
 * Module 2 - Internship Management
 * Module 3 - Recommendation Engine
 * Module 4 - Search and Filter
@@ -318,6 +444,16 @@ In Progress:
 * Module 6 - Validation and Exception Handling
 * Module 7 - Background Processing
 * Module 8 - Collections and Optimization
+
+---
+
+# Version Control
+
+The project is maintained using **Git and GitHub**.
+
+Development is organized using feature/module branches and pull requests to `main`.
+
+Major completed modules are merged into the `main` branch after testing.
 
 ---
 
