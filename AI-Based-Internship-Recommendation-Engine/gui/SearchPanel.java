@@ -4,6 +4,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SearchPanel extends JPanel {
 
@@ -79,7 +80,7 @@ public class SearchPanel extends JPanel {
         gbc.insets = new Insets(0, 0, 6, 0);
         filterPanel.add(title, gbc);
 
-        JLabel desc = new JLabel("Search by company or role, filter by location, skills, and minimum CGPA.");
+        JLabel desc = new JLabel("Search by keyword across company, role, location, and skills. Filter by location, skills, and minimum CGPA.");
         desc.setFont(AppFrame.DESC_FONT);
         desc.setForeground(AppFrame.TEXT_SEC);
         desc.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -106,8 +107,9 @@ public class SearchPanel extends JPanel {
         AppFrame.styleBack(clearBtn);
         clearBtn.addActionListener(e -> clearFilters());
 
-        JButton backBtn = new JButton("Back");
+        JButton backBtn = new JButton("Back to Dashboard");
         AppFrame.styleBack(backBtn);
+        backBtn.setMaximumSize(new Dimension(160, 34));
         backBtn.addActionListener(e -> frame.showStudentDash());
 
         btnPanel.add(searchBtn);
@@ -198,7 +200,7 @@ public class SearchPanel extends JPanel {
         };
     }
 
-    private void refreshTable(ArrayList<Internship> internships) {
+    private void refreshTable(List<Internship> internships) {
         tableModel.setRowCount(0);
         if (internships.isEmpty()) {
             showNoResultsMessage();
@@ -255,7 +257,9 @@ public class SearchPanel extends JPanel {
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        ArrayList<Internship> results = searchFilter.applyFilters(company, role, location, skills, minCGPA);
+        // MODULE 8: Combine company+role into single search term for OR matching
+        String search = (company + " " + role).trim();
+        List<Internship> results = searchFilter.applyFilters(company, role, location, skills, minCGPA);
         refreshTable(results);
     }
 
@@ -265,7 +269,7 @@ public class SearchPanel extends JPanel {
         locationField.setText("");
         skillsField.setText("");
         cgpaField.setText("");
-        ArrayList<Internship> all = searchFilter.clearFilters();
+        List<Internship> all = searchFilter.clearFilters();
         refreshTable(all);
     }
 

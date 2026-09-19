@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class StudentRegPanel extends JPanel {
 
     private AppFrame frame;
-    private JTextField idField, nameField, ageField, degreeField, cgpaField, skillsField, interestsField, locationField;
+    private JTextField idField, nameField, ageField, degreeField, cgpaField, skillsField, interestsField, locationField, preferredStipendField;
     private JPasswordField passField;
     private JTextArea skillsArea, interestsArea;
 
@@ -100,6 +100,7 @@ public class StudentRegPanel extends JPanel {
         cgb = addTextAreaField(card, cgb, "Interests", interestsArea = new JTextArea(3, 25));
 
         cgb = addField(card, cgb, "Preferred Location", locationField = new JTextField(25));
+        cgb = addField(card, cgb, "Preferred Stipend ($, optional)", preferredStipendField = new JTextField(25));
         cgb = addField(card, cgb, "Password", passField = new JPasswordField(25));
 
         // Buttons
@@ -259,6 +260,22 @@ public class StudentRegPanel extends JPanel {
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        double preferredStipend = 0;
+        String stipendText = preferredStipendField.getText().trim();
+        if (!stipendText.isEmpty()) {
+            try {
+                preferredStipend = Double.parseDouble(stipendText);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Preferred stipend must be a number.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (preferredStipend < 0) {
+                JOptionPane.showMessageDialog(this, "Preferred stipend cannot be negative.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
         if (age < 16 || age > 60) {
             JOptionPane.showMessageDialog(this, "Age must be between 16 and 60.",
                 "Validation Error", JOptionPane.WARNING_MESSAGE);
@@ -278,7 +295,7 @@ public class StudentRegPanel extends JPanel {
             }
         }
 
-        Student student = new Student(id, name, age, degree, cgpa, skills, interests, location, password);
+        Student student = new Student(id, name, age, degree, cgpa, skills, interests, location, password, preferredStipend);
         UserManager um = frame.getUserManager();
         um.students[um.count++] = student;
         StudentStorage.saveStudent(student);

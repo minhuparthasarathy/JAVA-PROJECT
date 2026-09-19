@@ -52,6 +52,7 @@ public class StudentDashPanel extends JPanel {
 
         JButton logoutBtn = new JButton("Logout");
         AppFrame.styleDelete(logoutBtn);
+        logoutBtn.setMaximumSize(new Dimension(100, 34));
         logoutBtn.addActionListener(e -> frame.logout());
 
         header.add(logoutBtn, BorderLayout.EAST);
@@ -137,7 +138,8 @@ public class StudentDashPanel extends JPanel {
 
         JPanel btnRow = new JPanel();
         btnRow.setBackground(AppFrame.SURFACE);
-        btnRow.setLayout(new GridLayout(2, 2, 10, 10));
+        btnRow.setMaximumSize(new Dimension(700, 80));
+        btnRow.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton profileBtn = createActionBtn("View Profile", AppFrame.PRIMARY, e -> frame.showProfile());
         recoBtn = createActionBtn("View Recommendations", AppFrame.PRIMARY, e -> frame.showRecommendations());

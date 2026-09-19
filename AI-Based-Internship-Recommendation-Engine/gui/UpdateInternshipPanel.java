@@ -2,12 +2,13 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class UpdateInternshipPanel extends JPanel {
 
     private AppFrame frame;
     private JTextField idField, companyField, roleField, skillsField, cgpaField, locationField, stipendField, durationField;
+    private JPanel formPanel;
+    private CardLayout formLayout;
 
     public UpdateInternshipPanel(AppFrame frame) {
         this.frame = frame;
@@ -65,10 +66,55 @@ public class UpdateInternshipPanel extends JPanel {
     }
 
     private JPanel createFormPanel() {
-        JPanel formPanel = new JPanel();
+        formPanel = new JPanel();
         formPanel.setBackground(AppFrame.SURFACE);
         formPanel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-        formPanel.setLayout(new GridBagLayout());
+        formLayout = new CardLayout(12, 12);
+        formPanel.setLayout(formLayout);
+
+        formPanel.add(createIdPanel(), "idPanel");
+        formPanel.add(createDetailsPanel(), "detailsPanel");
+        showIdPanel();
+        return formPanel;
+    }
+
+    private JPanel createIdPanel() {
+        JPanel panel = new JPanel();
+        panel.setBackground(AppFrame.SURFACE);
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(8, 8, 8, 8);
+
+        JLabel title = new JLabel("Find Internship");
+        title.setFont(AppFrame.SECTION_TITLE);
+        title.setForeground(AppFrame.PRIMARY);
+        panel.add(title, gbc);
+
+        idField = new JTextField(25);
+        idField.setFont(AppFrame.BODY_FONT);
+        idField.setMaximumSize(new Dimension(500, 36));
+        gbc.gridy++;
+        panel.add(idField, gbc);
+
+        JButton loadBtn = new JButton("Load");
+        AppFrame.stylePrimary(loadBtn);
+        loadBtn.addActionListener(e -> doLoad());
+        gbc.gridy++;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+        panel.add(loadBtn, gbc);
+        return panel;
+    }
+
+    private JPanel createDetailsPanel() {
+        JPanel panel = new JPanel();
+        panel.setBackground(AppFrame.SURFACE);
+        panel.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
+        panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -76,45 +122,43 @@ public class UpdateInternshipPanel extends JPanel {
         gbc.weightx = 1.0;
         gbc.insets = new Insets(4, 4, 4, 4);
 
-        idField = new JTextField(25);
-        idField.setMaximumSize(new Dimension(500, 36));
-        addFormPair(formPanel, gbc, "Internship ID", idField);
+        JLabel title = new JLabel("Update Internship Details");
+        title.setFont(AppFrame.SECTION_TITLE);
+        title.setForeground(AppFrame.PRIMARY);
+        gbc.gridwidth = 2;
+        panel.add(title, gbc);
 
         companyField = new JTextField(25);
         companyField.setMaximumSize(new Dimension(500, 36));
-        addFormPair(formPanel, gbc, "Company", companyField);
+        addFormPair(panel, gbc, "Company", companyField);
 
         roleField = new JTextField(25);
         roleField.setMaximumSize(new Dimension(500, 36));
-        addFormPair(formPanel, gbc, "Role", roleField);
+        addFormPair(panel, gbc, "Role", roleField);
 
         skillsField = new JTextField(25);
         skillsField.setMaximumSize(new Dimension(500, 36));
-        addFormPair(formPanel, gbc, "Required Skills", skillsField);
+        addFormPair(panel, gbc, "Required Skills", skillsField);
 
         cgpaField = new JTextField(12);
         cgpaField.setMaximumSize(new Dimension(500, 36));
-        addFormPair(formPanel, gbc, "Required CGPA", cgpaField);
+        addFormPair(panel, gbc, "Required CGPA", cgpaField);
 
         locationField = new JTextField(20);
         locationField.setMaximumSize(new Dimension(500, 36));
-        addFormPair(formPanel, gbc, "Location", locationField);
+        addFormPair(panel, gbc, "Location", locationField);
 
         stipendField = new JTextField(12);
         stipendField.setMaximumSize(new Dimension(500, 36));
-        addFormPair(formPanel, gbc, "Stipend ($)", stipendField);
+        addFormPair(panel, gbc, "Stipend ($)", stipendField);
 
         durationField = new JTextField(12);
         durationField.setMaximumSize(new Dimension(500, 36));
-        addFormFull(formPanel, gbc, "Duration", durationField);
+        addFormFull(panel, gbc, "Duration", durationField);
 
         JPanel btnPanel = new JPanel();
         btnPanel.setBackground(AppFrame.SURFACE);
-        btnPanel.setLayout(new GridLayout(1, 3, 10, 0));
-
-        JButton loadBtn = new JButton("Load");
-        AppFrame.stylePrimary(loadBtn);
-        loadBtn.addActionListener(e -> doLoad());
+        btnPanel.setLayout(new GridLayout(1, 2, 10, 0));
 
         JButton updateBtn = new JButton("Update");
         AppFrame.stylePrimary(updateBtn);
@@ -124,7 +168,6 @@ public class UpdateInternshipPanel extends JPanel {
         AppFrame.styleBack(clearBtn);
         clearBtn.addActionListener(e -> clearForm());
 
-        btnPanel.add(loadBtn);
         btnPanel.add(updateBtn);
         btnPanel.add(clearBtn);
 
@@ -134,9 +177,20 @@ public class UpdateInternshipPanel extends JPanel {
         gbc.insets = new Insets(16, 0, 0, 0);
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.CENTER;
-        formPanel.add(btnPanel, gbc);
+        panel.add(btnPanel, gbc);
+        return panel;
+    }
 
-        return formPanel;
+    private void showIdPanel() {
+        if (formLayout != null && formPanel != null) {
+            formLayout.show(formPanel, "idPanel");
+        }
+    }
+
+    private void showDetailsPanel() {
+        if (formLayout != null && formPanel != null) {
+            formLayout.show(formPanel, "detailsPanel");
+        }
     }
 
     private JPanel createFooter() {
@@ -158,6 +212,7 @@ public class UpdateInternshipPanel extends JPanel {
 
         gbc.gridy++;
         gbc.gridx = 0;
+        gbc.gridwidth = 1;
         gbc.insets = new Insets(4, 4, 0, 4);
         panel.add(label, gbc);
 
@@ -165,6 +220,7 @@ public class UpdateInternshipPanel extends JPanel {
         field.setMaximumSize(new Dimension(500, 36));
 
         gbc.gridx = 1;
+        gbc.gridwidth = 1;
         gbc.insets = new Insets(4, 0, 0, 4);
         panel.add(field, gbc);
     }
@@ -192,7 +248,6 @@ public class UpdateInternshipPanel extends JPanel {
     }
 
     private void doLoad() {
-        clearForm();
         String idText = idField.getText().trim();
         if (idText.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Internship ID is required.",
@@ -208,23 +263,26 @@ public class UpdateInternshipPanel extends JPanel {
             return;
         }
 
-        ArrayList<Internship> internships = frame.getInternshipManager().getAllInternships();
-        for (Internship intern : internships) {
-            if (intern.getId() == id) {
-                companyField.setText(intern.getCompany());
-                roleField.setText(intern.getRole());
-                skillsField.setText(intern.getRequiredSkills());
-                cgpaField.setText(String.valueOf(intern.getRequiredCGPA()));
-                locationField.setText(intern.getLocation());
-                stipendField.setText(String.valueOf(intern.getStipend()));
-                durationField.setText(intern.getDuration());
-                JOptionPane.showMessageDialog(this, "Internship loaded successfully.",
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
+        // MODULE 8: Load the existing object through the HashMap index.
+        Internship intern = frame.getInternshipManager().getInternshipById(id);
+        if (intern == null) {
+            JOptionPane.showMessageDialog(this, "Internship not found with ID: " + id,
+                "Not Found", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-        JOptionPane.showMessageDialog(this, "Internship not found with ID: " + id,
-            "Not Found", JOptionPane.WARNING_MESSAGE);
+
+        clearDetails();
+        idField.setText(String.valueOf(id));
+        companyField.setText(intern.getCompany());
+        roleField.setText(intern.getRole());
+        skillsField.setText(intern.getRequiredSkills());
+        cgpaField.setText(String.valueOf(intern.getRequiredCGPA()));
+        locationField.setText(intern.getLocation());
+        stipendField.setText(String.valueOf(intern.getStipend()));
+        durationField.setText(intern.getDuration());
+        showDetailsPanel();
+        JOptionPane.showMessageDialog(this, "Internship loaded successfully.",
+            "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void doUpdate() {
@@ -297,30 +355,15 @@ public class UpdateInternshipPanel extends JPanel {
             return;
         }
 
-        ArrayList<Internship> internships = frame.getInternshipManager().getAllInternships();
-        boolean found = false;
-        for (int i = 0; i < internships.size(); i++) {
-            if (internships.get(i).getId() == id) {
-                Internship updated = new Internship(id, company, role, skills, cgpa, location, stipend, durationStr);
-                internships.set(i, updated);
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            JOptionPane.showMessageDialog(this, "Internship not found with ID: " + id,
-                "Not Found", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        frame.getInternshipManager().saveInternshipsToFile();
+        // MODULE 8: Update through InternshipManager so ArrayList and HashMap stay synchronized.
+        Internship updated = new Internship(id, company, role, skills, cgpa, location, stipend, durationStr);
+        frame.getInternshipManager().updateInternship(id, updated);
         clearForm();
         JOptionPane.showMessageDialog(this, "Internship Updated Successfully!",
             "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void clearForm() {
-        idField.setText("");
+    private void clearDetails() {
         companyField.setText("");
         roleField.setText("");
         skillsField.setText("");
@@ -328,6 +371,12 @@ public class UpdateInternshipPanel extends JPanel {
         locationField.setText("");
         stipendField.setText("");
         durationField.setText("");
+    }
+
+    private void clearForm() {
+        idField.setText("");
+        clearDetails();
+        showIdPanel();
     }
 
     public void refresh() {

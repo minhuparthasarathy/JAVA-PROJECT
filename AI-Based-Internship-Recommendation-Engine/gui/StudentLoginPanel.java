@@ -93,7 +93,8 @@ public class StudentLoginPanel extends JPanel {
         JPanel btnPanel = new JPanel();
         btnPanel.setBackground(AppFrame.SURFACE);
         btnPanel.setLayout(new GridLayout(1, 2, 10, 0));
-        btnPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnPanel.setMaximumSize(new Dimension(400, 80));
 
         JButton loginBtn = new JButton("Login");
         AppFrame.stylePrimary(loginBtn);

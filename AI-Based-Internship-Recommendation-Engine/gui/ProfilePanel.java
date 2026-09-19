@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class ProfilePanel extends JPanel {
 
     private AppFrame frame;
-    private JTextField nameField, ageField, degreeField, cgpaField, skillsField, interestsField, locationField;
-    private JPasswordField passwordField;
+    private JTextField nameField, ageField, degreeField, cgpaField, skillsField, interestsField, locationField, preferredStipendField;
+    private JPasswordField currentPasswordField, newPasswordField;
 
     public ProfilePanel(AppFrame frame) {
         this.frame = frame;
@@ -89,7 +89,7 @@ public class ProfilePanel extends JPanel {
         cgb.insets = new Insets(24, 0, 8, 0);
         card.add(editTitle, cgb);
 
-        JLabel editDesc = new JLabel("Update your profile information. All fields are editable.");
+        JLabel editDesc = new JLabel("Update your profile. Student ID is read-only; leave a field blank to keep its current value.");
         editDesc.setFont(AppFrame.SMALL_FONT);
         editDesc.setForeground(AppFrame.TEXT_SEC);
         cgb.gridy++;
@@ -131,9 +131,18 @@ public class ProfilePanel extends JPanel {
         locationField.setMaximumSize(new Dimension(400, 36));
         cgb = addEditField(cgb, card, "Preferred Location", locationField);
 
-        passwordField = new JPasswordField(25);
-        passwordField.setMaximumSize(new Dimension(400, 36));
-        cgb = addEditField(cgb, card, "Password", passwordField);
+        preferredStipendField = new JTextField(25);
+        preferredStipendField.setText(String.valueOf(s.getPreferredStipend()));
+        preferredStipendField.setMaximumSize(new Dimension(400, 36));
+        cgb = addEditField(cgb, card, "Preferred Stipend ($)", preferredStipendField);
+
+        currentPasswordField = new JPasswordField(25);
+        currentPasswordField.setMaximumSize(new Dimension(400, 36));
+        cgb = addEditField(cgb, card, "Current Password (only when changing)", currentPasswordField);
+
+        newPasswordField = new JPasswordField(25);
+        newPasswordField.setMaximumSize(new Dimension(400, 36));
+        cgb = addEditField(cgb, card, "New Password (blank keeps current)", newPasswordField);
 
         cgb.gridx = 0;
         cgb.gridy = 0;
@@ -219,6 +228,7 @@ public class ProfilePanel extends JPanel {
 
     /**
      * Encapsulation - uses Student setter methods
+     * MODULE 8: Blank fields retain the current profile values.
      */
     private void doSave() {
         Student s = frame.getCurrentStudent();
@@ -228,89 +238,100 @@ public class ProfilePanel extends JPanel {
         }
 
         String name = nameField.getText().trim();
+        if (!name.isEmpty()) {
+            s.setName(name);
+        }
+
         String ageText = ageField.getText().trim();
+        if (!ageText.isEmpty()) {
+            int age;
+            try {
+                age = Integer.parseInt(ageText);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Age must be a valid number.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (age < 16 || age > 60) {
+                JOptionPane.showMessageDialog(this, "Age must be between 16 and 60.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            s.setAge(age);
+        }
+
         String degree = degreeField.getText().trim();
+        if (!degree.isEmpty()) {
+            s.setDegree(degree);
+        }
+
         String cgpaText = cgpaField.getText().trim();
+        if (!cgpaText.isEmpty()) {
+            double cgpa;
+            try {
+                cgpa = Double.parseDouble(cgpaText);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "CGPA must be a number.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (cgpa < 0 || cgpa > 10) {
+                JOptionPane.showMessageDialog(this, "CGPA must be between 0 and 10.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            s.setCgpa(cgpa);
+        }
+
         String skills = skillsField.getText().trim();
+        if (!skills.isEmpty()) {
+            s.setSkills(skills);
+        }
+
         String interests = interestsField.getText().trim();
+        if (!interests.isEmpty()) {
+            s.setInterests(interests);
+        }
+
         String location = locationField.getText().trim();
-        String password = new String(passwordField.getPassword()).trim();
-
-        if (name.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Name is required.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (ageText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Age is required.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        int age;
-        try {
-            age = Integer.parseInt(ageText);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Age must be a valid number.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (age < 16 || age > 60) {
-            JOptionPane.showMessageDialog(this, "Age must be between 16 and 60.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (degree.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Degree is required.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (cgpaText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "CGPA is required.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        double cgpa;
-        try {
-            cgpa = Double.parseDouble(cgpaText);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "CGPA must be a number.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (cgpa < 0 || cgpa > 10) {
-            JOptionPane.showMessageDialog(this, "CGPA must be between 0 and 10.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (skills.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Skills are required.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (interests.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Interests are required.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (location.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Preferred location is required.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if (password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Password cannot be empty.",
-                "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
+        if (!location.isEmpty()) {
+            s.setPreferredLocation(location);
         }
 
-        s.setName(name);
-        s.setAge(age);
-        s.setDegree(degree);
-        s.setCgpa(Double.parseDouble(cgpaText));
-        s.setSkills(skills);
-        s.setInterests(interests);
-        s.setPreferredLocation(location);
-        s.setPassword(password);
+        String stipendText = preferredStipendField.getText().trim();
+        if (!stipendText.isEmpty()) {
+            double stipend;
+            try {
+                stipend = Double.parseDouble(stipendText);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Preferred stipend must be a number.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (stipend < 0) {
+                JOptionPane.showMessageDialog(this, "Preferred stipend cannot be negative.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            s.setPreferredStipend(stipend);
+        }
+
+        String currentPassword = new String(currentPasswordField.getPassword()).trim();
+        String newPassword = new String(newPasswordField.getPassword()).trim();
+        if (!newPassword.isEmpty()) {
+            if (currentPassword.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Current password is required to change the password.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (!s.getPassword().equals(currentPassword)) {
+                JOptionPane.showMessageDialog(this, "Current password is incorrect.",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            s.setPassword(newPassword);
+        }
+
         StudentStorage.saveStudent(s);
         frame.showProfile();
         JOptionPane.showMessageDialog(this, "Profile updated successfully.",

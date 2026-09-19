@@ -12,6 +12,7 @@ public class Student {
     private String skills;
     private String interests;
     private String preferredLocation;
+    private double preferredStipend;
     private String password;
 
     // Concept Used: Constructor
@@ -25,6 +26,19 @@ public class Student {
                    String interests,
                    String preferredLocation,
                    String password) {
+        this(studentId, name, age, degree, cgpa, skills, interests, preferredLocation, password, 0);
+    }
+
+    public Student(int studentId,
+                   String name,
+                   int age,
+                   String degree,
+                   double cgpa,
+                   String skills,
+                   String interests,
+                   String preferredLocation,
+                   String password,
+                   double preferredStipend) {
 
         this.studentId = studentId;
         this.name = name;
@@ -34,6 +48,7 @@ public class Student {
         this.skills = skills;
         this.interests = interests;
         this.preferredLocation = preferredLocation;
+        this.preferredStipend = preferredStipend;
         this.password = password;
 
     }
@@ -89,6 +104,12 @@ public class Student {
 
     }
 
+    public double getPreferredStipend() {
+
+        return preferredStipend;
+
+    }
+
     public String getPassword() {
 
         return password;
@@ -113,6 +134,12 @@ public class Student {
     public void setPreferredLocation(String preferredLocation) {
 
         this.preferredLocation = preferredLocation;
+
+    }
+
+    public void setPreferredStipend(double preferredStipend) {
+
+        this.preferredStipend = preferredStipend;
 
     }
 
@@ -150,11 +177,13 @@ public class Student {
     // Updates student information
     public void updateProfile(String skills,
                               String interests,
-                              String location) {
+                              String location,
+                              double stipend) {
 
         this.skills = skills;
         this.interests = interests;
         this.preferredLocation = location;
+        this.preferredStipend = stipend;
 
     }
 
@@ -165,7 +194,7 @@ public class Student {
 
         return studentId + "|" + name + "|" + age + "|" + degree + "|" +
                cgpa + "|" + skills + "|" + interests + "|" +
-               preferredLocation + "|" + password;
+               preferredLocation + "|" + preferredStipend + "|" + password;
 
     }
 
@@ -191,6 +220,8 @@ public class Student {
 
         System.out.println("Preferred Location : "
                             + preferredLocation);
+
+        System.out.println("Preferred Stipend : $" + preferredStipend);
 
     }
 

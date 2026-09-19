@@ -1,3 +1,4 @@
-123|minhu|19|B.E|9.0|html|htnl|chennai|123
-1234|minhu parthasarathy|19|B.E|9.0|html,react|html|chennai|12345
-12345|minhu|19|B.E|8.0|html,react|html|chennai|12345
+123|minhu|19|B.E|9.0|html|htnl|chennai|0.0|123
+1234|minhu parthasarathy|19|B.E|9.0|html,react|html|chennai|0.0|12345
+12345|minhu|19|B.E|8.0|html,react|html|chennai|0.0|12345
+2222|Gowtham|21|B.tech|9.0|Testing|testing|chennai|0.0|123
