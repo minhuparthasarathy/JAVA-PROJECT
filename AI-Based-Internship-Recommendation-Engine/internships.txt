@@ -1,12 +1,100 @@
 1|Microsoft|Tester|Testing|9.0|Delhi|700.0|6
-2|Cisco|Tester|frontend,cpp|8.0|chennai|10000.0|3
-3|Infosys|Software Developer|java,python|7.5|bengaluru|18000.0|6
-4|Wipro|Data Analyst|sql,excel|7.0|hyderabad|15000.0|3
-5|Accenture|Web Developer|javascript,react|8.0|pune|22000.0|6
-6|Cognizant|Software Developer|java,sql|7.0|mumbai|16000.0|6
-7|Deloitte|Data Analyst|python,sql|8.5|noida|20000.0|3
-8|HCLTech|Web Developer|java,html|7.5|chennai|17000.0|6
-9|IBM|Software Developer|java,python,sql|8.0|bengaluru|25000.0|6
-10|TCS|Data Analyst|sql,python|7.0|pune|16000.0|3
-123|tata|tester|testing|9.0|delhi|800.0|2
-22|Google|Backend Developer|Node Js|7.0|Pune|798.0|7
+2|Cisco|Tester|frontend,cpp|8.0|Chennai|10000.0|3
+3|Infosys|Software Developer|java,python|7.5|Bengaluru|18000.0|6
+4|Wipro|Data Analyst|sql,excel|7.0|Hyderabad|15000.0|3
+5|Accenture|Web Developer|javascript,react|8.0|Pune|22000.0|6
+6|Cognizant|Software Developer|java,sql|7.0|Mumbai|16000.0|6
+7|Deloitte|Data Analyst|python,sql|8.5|Noida|20000.0|3
+8|HCLTech|Web Developer|java,html|7.5|Chennai|17000.0|6
+9|IBM|Software Developer|java,python,sql|8.0|Bengaluru|25000.0|6
+10|TCS|Data Analyst|sql,python|7.0|Pune|16000.0|3
+11|Tata|Tester|testing|9.0|Delhi|800.0|2
+12|Google|Backend Developer|nodejs,javascript|7.0|Pune|28000.0|6
+13|Amazon|Software Developer|java,python|8.0|Bengaluru|30000.0|6
+14|Zoho|Software Developer|java,sql|7.5|Chennai|20000.0|6
+15|Freshworks|Frontend Developer|html,css,javascript|7.0|Chennai|18000.0|3
+16|Oracle|Database Developer|sql,java|8.0|Hyderabad|24000.0|6
+17|SAP|Software Developer|java,sql,cloud|7.5|Bengaluru|23000.0|6
+18|Capgemini|Web Developer|html,css,javascript|7.0|Pune|17000.0|3
+19|Tech Mahindra|Software Developer|java,python|7.0|Hyderabad|15000.0|6
+20|LTI Mindtree|Data Analyst|python,sql,excel|7.5|Mumbai|19000.0|6
+21|Accenture|Business Analyst|sql,excel|7.5|Bengaluru|21000.0|6
+22|Deloitte|Software Tester|testing,java|7.0|Mumbai|18000.0|3
+23|TCS|Frontend Developer|html,css,javascript|7.0|Chennai|16000.0|6
+24|Infosys|Cloud Intern|cloud,linux|7.5|Bengaluru|20000.0|6
+25|Wipro|Python Developer|python,django|7.0|Hyderabad|18000.0|6
+26|HCLTech|Network Engineer|networking,linux|7.5|Noida|17000.0|3
+27|IBM|Data Scientist|python,machinelearning|8.0|Bengaluru|27000.0|6
+28|Cognizant|Business Analyst|sql,excel,python|7.5|Chennai|19000.0|6
+29|Amazon|Cloud Engineer|aws,cloud,linux|8.0|Hyderabad|28000.0|6
+30|Microsoft|Software Developer|csharp,azure|8.5|Hyderabad|30000.0|6
+31|Google|Data Analyst|python,sql|8.0|Bengaluru|29000.0|6
+32|Cisco|Network Engineer|networking,linux,security|7.5|Bengaluru|22000.0|6
+33|Oracle|Java Developer|java,spring,sql|8.0|Bengaluru|25000.0|6
+34|SAP|Data Analyst|sql,excel|7.5|Mumbai|21000.0|3
+35|Zoho|Backend Developer|java,sql|7.0|Chennai|20000.0|6
+36|Freshworks|Software Developer|python,javascript|7.5|Chennai|22000.0|6
+37|Tata|Web Developer|html,css,javascript|7.0|Mumbai|16000.0|3
+38|Tech Mahindra|Cloud Engineer|aws,linux|7.5|Pune|19000.0|6
+39|Capgemini|Data Analyst|python,sql,excel|7.0|Bengaluru|18000.0|6
+40|LTI Mindtree|Software Tester|testing,java|7.0|Pune|17000.0|3
+41|Accenture|Cloud Intern|azure,cloud|7.5|Hyderabad|22000.0|6
+42|Wipro|Web Developer|react,javascript|7.0|Bengaluru|18000.0|6
+43|Infosys|Database Intern|sql,oracle|7.0|Mysuru|16000.0|3
+44|TCS|Java Developer|java,spring,sql|7.5|Chennai|20000.0|6
+45|Cognizant|Python Developer|python,django|7.0|Pune|19000.0|6
+46|HCLTech|Software Developer|cpp,java|7.5|Noida|18000.0|6
+47|IBM|Cloud Developer|cloud,python|8.0|Hyderabad|26000.0|6
+48|Deloitte|Cybersecurity Intern|security,networking|8.0|Mumbai|23000.0|3
+49|Cisco|Cybersecurity Intern|security,linux|7.5|Bengaluru|24000.0|6
+50|Microsoft|Data Analyst|python,sql,powerbi|8.0|Hyderabad|28000.0|6
+51|Amazon|Data Analyst|sql,python,excel|7.5|Bengaluru|27000.0|6
+52|Google|Frontend Developer|html,css,javascript|8.0|Bengaluru|29000.0|6
+53|Oracle|Software Tester|testing,sql|7.0|Hyderabad|21000.0|3
+54|SAP|Java Developer|java,spring|7.5|Bengaluru|24000.0|6
+55|Zoho|Data Analyst|sql,python|7.0|Chennai|19000.0|3
+56|Freshworks|Backend Developer|nodejs,javascript|7.5|Chennai|21000.0|6
+57|Tata|Software Developer|java,python|7.0|Pune|17000.0|6
+58|Tech Mahindra|Data Analyst|sql,excel|7.0|Mumbai|16000.0|3
+59|Capgemini|Frontend Developer|react,javascript,css|7.5|Pune|19000.0|6
+60|LTI Mindtree|Cloud Engineer|aws,cloud|7.5|Bengaluru|22000.0|6
+61|Accenture|Software Developer|java,python|8.0|Pune|23000.0|6
+62|Wipro|Software Tester|testing,selenium|7.0|Hyderabad|17000.0|3
+63|Infosys|Data Scientist|python,machinelearning|8.0|Bengaluru|25000.0|6
+64|TCS|Cloud Engineer|aws,linux|7.5|Mumbai|21000.0|6
+65|Cognizant|Frontend Developer|react,javascript|7.0|Chennai|18000.0|3
+66|HCLTech|Data Analyst|python,sql|7.5|Noida|19000.0|6
+67|IBM|Backend Developer|java,spring,sql|8.0|Bengaluru|26000.0|6
+68|Deloitte|Business Analyst|sql,excel,powerbi|7.5|Pune|22000.0|6
+69|Cisco|Network Engineer|networking,linux|7.0|Chennai|20000.0|6
+70|Microsoft|Cloud Engineer|azure,cloud|8.0|Hyderabad|30000.0|6
+71|Amazon|Backend Developer|java,nodejs|8.0|Bengaluru|28000.0|6
+72|Google|Software Developer|python,java|8.5|Bengaluru|32000.0|6
+73|Oracle|Data Analyst|sql,python|7.5|Pune|23000.0|3
+74|SAP|Software Tester|testing,java|7.0|Mumbai|19000.0|6
+75|Zoho|Frontend Developer|html,css,javascript|7.0|Chennai|18000.0|3
+76|Freshworks|Data Analyst|sql,excel|7.5|Chennai|20000.0|6
+77|Tata|Cloud Engineer|aws,cloud,linux|7.0|Pune|18000.0|6
+78|Tech Mahindra|Java Developer|java,sql|7.5|Hyderabad|19000.0|6
+79|Capgemini|Python Developer|python,django|7.0|Bengaluru|18000.0|3
+80|LTI Mindtree|Web Developer|html,css,javascript|7.5|Mumbai|19000.0|6
+81|Accenture|Data Scientist|python,machinelearning|8.0|Bengaluru|26000.0|6
+82|Wipro|Cloud Engineer|azure,linux|7.5|Pune|20000.0|6
+83|Infosys|Frontend Developer|react,javascript|7.0|Chennai|18000.0|3
+84|TCS|Software Developer|java,python,sql|7.5|Bengaluru|22000.0|6
+85|Cognizant|Cloud Engineer|aws,cloud|7.0|Hyderabad|21000.0|6
+86|HCLTech|Python Developer|python,django|7.0|Chennai|18000.0|3
+87|IBM|Cybersecurity Intern|security,linux|8.0|Bengaluru|25000.0|6
+88|Deloitte|Data Scientist|python,machinelearning|8.5|Pune|27000.0|6
+89|Cisco|Software Developer|cpp,java|7.5|Bengaluru|22000.0|6
+90|Microsoft|Web Developer|html,css,javascript|8.0|Hyderabad|28000.0|6
+91|Amazon|Software Tester|testing,selenium|7.5|Bengaluru|23000.0|3
+92|Google|Cloud Engineer|cloud,python|8.0|Hyderabad|30000.0|6
+93|Oracle|Backend Developer|java,sql|7.5|Bengaluru|24000.0|6
+94|SAP|Frontend Developer|react,javascript|7.0|Pune|21000.0|3
+95|Zoho|Python Developer|python,django|7.0|Chennai|19000.0|6
+96|Freshworks|Software Developer|java,sql|7.5|Chennai|22000.0|6
+97|Tata|Data Analyst|sql,python,excel|7.0|Mumbai|18000.0|3
+98|Tech Mahindra|Web Developer|html,css,javascript|7.0|Pune|17000.0|6
+99|Capgemini|Cloud Engineer|aws,cloud|7.5|Bengaluru|21000.0|6
+100|LTI Mindtree|Software Developer|java,python|7.5|Hyderabad|20000.0|6
